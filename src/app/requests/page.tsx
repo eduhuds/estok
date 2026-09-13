@@ -1,0 +1,118 @@
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Search, Plus, Filter, MoreHorizontal } from "lucide-react"
+import Link from "next/link"
+import { db } from "@/lib/db"
+
+export default async function RequestsPage() {
+  const requests = await db.materialRequest.findMany({
+    include: {
+      requester: true,
+      warehouse: true,
+      _count: { select: { items: true } }
+    },
+    orderBy: { createdAt: 'desc' }
+  })
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Requisições de Material</h2>
+          <p className="text-gray-500">Gerencie solicitações, separação e entregas de materiais.</p>
+        </div>
+        <Link href="/requests/new">
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Nova Requisição
+          </Button>
+        </Link>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Input placeholder="Buscar por número ou solicitante..." className="pl-9" />
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" className="flex items-center gap-2">
+            <Filter className="h-4 w-4" />
+            Filtros
+          </Button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Número</TableHead>
+              <TableHead>Data</TableHead>
+              <TableHead>Solicitante</TableHead>
+              <TableHead>Almoxarifado</TableHead>
+              <TableHead className="text-center">Itens</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Prioridade</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {requests.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                  Nenhuma requisição encontrada.
+                </TableCell>
+              </TableRow>
+            ) : (
+              requests.map((req) => {
+                let statusColor = "default"
+                let statusLabel = req.status
+                if (req.status === 'DRAFT') { statusColor = "secondary"; statusLabel = "Rascunho" }
+                if (req.status === 'PENDING_APPROVAL') { statusColor = "warning"; statusLabel = "Pendente" }
+                if (req.status === 'APPROVED') { statusColor = "success"; statusLabel = "Aprovado" }
+                if (req.status === 'IN_SEPARATION') { statusColor = "default"; statusLabel = "Em Separação" }
+                if (req.status === 'PARTIALLY_FULFILLED') { statusColor = "default"; statusLabel = "Parcial" }
+                if (req.status === 'FULFILLED') { statusColor = "outline"; statusLabel = "Atendido" }
+                if (req.status === 'REJECTED' || req.status === 'CANCELLED') { statusColor = "destructive"; statusLabel = req.status === 'REJECTED' ? 'Rejeitado' : 'Cancelado' }
+
+                let prioColor = "text-gray-500"
+                if (req.priority === 'HIGH') prioColor = "text-orange-500 font-semibold"
+                if (req.priority === 'URGENT') prioColor = "text-red-600 font-bold"
+
+                return (
+                  <TableRow key={req.id}>
+                    <TableCell className="font-medium">
+                      <Link href={`/requests/${req.id}`} className="hover:underline text-blue-600">
+                        {req.requestNumber}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('pt-BR') : '-'}</TableCell>
+                    <TableCell>{req.requester.name}</TableCell>
+                    <TableCell>{req.warehouse.name}</TableCell>
+                    <TableCell className="text-center">{req._count.items}</TableCell>
+                    <TableCell>
+                      {/* @ts-expect-error: Badge variant accepts dynamic string mapping here although TS complains */}
+                      <Badge variant={statusColor}>{statusLabel}</Badge>
+                    </TableCell>
+                    <TableCell className={prioColor}>
+                      {req.priority === 'LOW' ? 'Baixa' : req.priority === 'NORMAL' ? 'Normal' : req.priority === 'HIGH' ? 'Alta' : 'Urgente'}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Link href={`/requests/${req.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+}

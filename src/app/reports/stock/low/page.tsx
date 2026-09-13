@@ -1,0 +1,83 @@
+import { requirePermissionPage } from "@/lib/permissions"
+import { db } from "@/lib/db"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { AlertTriangle } from "lucide-react"
+
+export default async function LowStockReportPage() {
+  await requirePermissionPage('REPORT_VIEW')
+
+  const stocks = await db.stock.findMany({
+    orderBy: [{ product: { name: 'asc' } }],
+    include: {
+      product: {
+        include: { category: true, unit: true }
+      },
+      warehouse: true,
+      location: true
+    }
+  })
+
+  const lowStocks = stocks.filter(s => s.quantity <= s.product.minimumStock)
+
+  return (
+    <div className="p-6 max-w-7xl mx-auto space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            <AlertTriangle className="h-6 w-6 text-amber-500" />
+            Produtos em Baixo Estoque
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">Itens que atingiram o limite mínimo ou estão zerados.</p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        {lowStocks.length === 0 ? (
+          <div className="p-8 text-center text-gray-500">
+            Nenhum produto em baixo estoque no momento.
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-gray-50">
+                <TableRow>
+                  <TableHead>Produto</TableHead>
+                  <TableHead>Código</TableHead>
+                  <TableHead>Almoxarifado</TableHead>
+                  <TableHead>Localização</TableHead>
+                  <TableHead className="text-right">Qtd Atual</TableHead>
+                  <TableHead className="text-right">Mínimo</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {lowStocks.map((stock) => {
+                  let status = 'LOW'
+                  if (stock.quantity <= 0) status = 'OUT_OF_STOCK'
+
+                  return (
+                    <TableRow key={stock.id}>
+                      <TableCell className="font-medium text-gray-900">{stock.product.name}</TableCell>
+                      <TableCell className="text-sm text-gray-500">{stock.product.code}</TableCell>
+                      <TableCell className="text-sm">{stock.warehouse.name}</TableCell>
+                      <TableCell className="text-sm font-mono bg-gray-50">{stock.location.code}</TableCell>
+                      <TableCell className="text-right font-bold text-gray-900">
+                        {stock.quantity} <span className="text-xs text-gray-400 font-normal">{stock.product.unit.code}</span>
+                      </TableCell>
+                      <TableCell className="text-right text-gray-500">{stock.product.minimumStock}</TableCell>
+                      <TableCell className="text-center">
+                        {status === 'LOW' && <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Baixo</Badge>}
+                        {status === 'OUT_OF_STOCK' && <Badge variant="destructive">Zerado</Badge>}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
