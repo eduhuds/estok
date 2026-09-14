@@ -11,6 +11,10 @@ export async function createTransferAction(formData: FormData) {
   const sourceLocationId = formData.get("sourceLocationId") as string
   const destinationLocationId = formData.get("destinationLocationId") as string
 
+  if (!sourceLocationId || !destinationLocationId) {
+    redirect("/transfers/new?error=Selecione a localização de origem e destino.")
+  }
+
   if (sourceLocationId === destinationLocationId) {
     throw new Error("Localização de origem e destino não podem ser iguais.")
   }

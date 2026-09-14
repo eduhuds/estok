@@ -2,6 +2,7 @@ import { requirePermissionPage } from "@/lib/permissions"
 import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Activity, Server, Database, Cloud } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function SystemHealthPage() {
   await requirePermissionPage('CONFIG_MANAGE')
@@ -29,12 +30,15 @@ export default async function SystemHealthPage() {
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Activity className="h-6 w-6 text-emerald-600" />
             Saúde do Sistema
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Status da infraestrutura e volume de dados da plataforma.</p>
+        </div>
         </div>
       </div>
 

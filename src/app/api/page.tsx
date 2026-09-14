@@ -2,14 +2,18 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Code2, Webhook, Key, ExternalLink } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function ApiPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h2 className="text-2xl font-bold tracking-tight">API / Integrações</h2>
           <p className="text-muted-foreground">Conecte o sistema a outros serviços corporativos e ERPs.</p>
+        </div>
         </div>
         <Badge variant="warning" className="px-3 py-1 text-sm">
           Em desenvolvimento

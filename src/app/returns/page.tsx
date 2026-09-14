@@ -2,9 +2,10 @@ import { db } from "@/lib/db"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, RotateCcw, Plus } from "lucide-react"
+import {  RotateCcw, Plus } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function ReturnsPage() {
   const returns = await db.materialReturn.findMany({
@@ -21,11 +22,7 @@ export default async function ReturnsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Devoluções</h2>
             <p className="text-muted-foreground">Controle de materiais devolvidos ao estoque.</p>
@@ -39,7 +36,7 @@ export default async function ReturnsPage() {
         </Link>
       </div>
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border">
           {returns.length === 0 ? (

@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { Bell } from "lucide-react"
 import { format } from "date-fns"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function NotificationsPage() {
   const session = await getSession()
@@ -25,12 +26,15 @@ export default async function NotificationsPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between border-b pb-4">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Bell className="h-6 w-6 text-indigo-600" />
             Notificações
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Seus alertas e mensagens do sistema.</p>
+        </div>
         </div>
       </div>
 

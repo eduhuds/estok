@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Download, FileSpreadsheet, FileText } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function ExportPage() {
   return (
     <div className="space-y-6 max-w-4xl">
-      <div>
+      <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
         <h2 className="text-2xl font-bold tracking-tight">Exportar Dados</h2>
         <p className="text-muted-foreground">Exporte relatórios e cadastros para integração com outros sistemas.</p>
       </div>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>

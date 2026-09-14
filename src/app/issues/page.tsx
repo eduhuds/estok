@@ -5,13 +5,17 @@ import { Badge } from "@/components/ui/badge"
 import { Search, Filter, MoreHorizontal, LogOut } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
+import { SearchInput } from "@/components/ui/search-input"
 
-export default async function IssuesPage() {
+export default async function IssuesPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const resolvedParams = await searchParams
+  const q = resolvedParams?.q || ''
   const issues = await db.materialRequest.findMany({
     where: {
       status: {
         in: ['PARTIALLY_FULFILLED', 'FULFILLED']
-      }
+      },
+      ...(q ? { OR: [{ requestNumber: { contains: q, mode: 'insensitive' } }, { requester: { name: { contains: q, mode: 'insensitive' } } }] } : {})
     },
     include: {
       requester: true,
@@ -36,11 +40,8 @@ export default async function IssuesPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar por número da requisição ou solicitante..." className="pl-9" />
-        </div>
+      <div className="flex flex-col sm:flex-row gap-4 bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border/40 shadow-sm">
+        <SearchInput placeholder="Buscar por número da requisição ou solicitante..." />
         <div className="flex gap-2">
           <Button variant="outline" className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
@@ -49,7 +50,7 @@ export default async function IssuesPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border">
           {issues.length === 0 ? (

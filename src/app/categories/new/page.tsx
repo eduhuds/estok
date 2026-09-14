@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Save } from "lucide-react"
+import {  Save } from "lucide-react"
 import Link from "next/link"
 import { createCategoryAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function NewCategoryPage({
   searchParams,
@@ -13,11 +14,7 @@ export default function NewCategoryPage({
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center gap-4">
-        <Link href="/categories">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Categoria</h2>
           <p className="text-muted-foreground">Adicione uma nova categoria de produto.</p>

@@ -2,6 +2,7 @@ import { requirePermissionPage } from "@/lib/permissions"
 import { db } from "@/lib/db"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BarChart3 } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function ConsumptionReportPage() {
   await requirePermissionPage('REPORT_VIEW')
@@ -36,16 +37,19 @@ export default async function ConsumptionReportPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-emerald-600" />
             Ranking de Consumo (Curva ABC)
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Produtos mais requisitados e entregues na operação.</p>
         </div>
+        </div>
       </div>
 
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {enrichedData.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             Nenhum consumo registrado.

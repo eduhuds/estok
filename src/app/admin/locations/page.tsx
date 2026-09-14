@@ -24,7 +24,7 @@ export default async function LocationsPage() {
         </Button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border/40 shadow-sm">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar localização por código ou nome..." className="pl-9" />

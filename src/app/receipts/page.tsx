@@ -5,9 +5,13 @@ import { Badge } from "@/components/ui/badge"
 import { Search, Plus, Filter, MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
+import { SearchInput } from "@/components/ui/search-input"
 
-export default async function ReceiptsPage() {
+export default async function ReceiptsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const resolvedParams = await searchParams
+  const q = resolvedParams?.q || ''
   const receipts = await db.stockReceipt.findMany({
+    where: q ? { OR: [{ documentNumber: { contains: q, mode: 'insensitive' } }, { supplier: { name: { contains: q, mode: 'insensitive' } } }] } : undefined,
     include: {
       supplier: true,
       warehouse: true,
@@ -31,11 +35,8 @@ export default async function ReceiptsPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar por número do documento ou fornecedor..." className="pl-9" />
-        </div>
+      <div className="flex flex-col sm:flex-row gap-4 bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border/40 shadow-sm">
+        <SearchInput placeholder="Buscar por número do documento ou fornecedor..." />
         <div className="flex gap-2">
           <Button variant="outline" className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
@@ -44,7 +45,7 @@ export default async function ReceiptsPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border">
           {receipts.length === 0 ? (

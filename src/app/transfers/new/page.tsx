@@ -3,11 +3,18 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
-import { ArrowLeft, Save, Plus, PackageX, ArrowRightLeft } from "lucide-react"
+import {  Save, Plus, PackageX, ArrowRightLeft } from "lucide-react"
 import Link from "next/link"
 import { createTransferAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
-export default async function NewTransferPage() {
+export default async function NewTransferPage({
+  searchParams
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
+  const resolvedParams = await searchParams
+  const error = resolvedParams?.error
   const warehouses = await db.warehouse.findMany({ 
     where: { status: 'ACTIVE' },
     include: { locations: true }
@@ -26,11 +33,7 @@ export default async function NewTransferPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/transfers">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Transferência</h2>
           <p className="text-muted-foreground">Mova materiais entre diferentes localizações ou estoques.</p>
@@ -39,6 +42,12 @@ export default async function NewTransferPage() {
 
       <Card>
         <CardContent className="p-6">
+          {error && (
+            <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+              <PackageX className="h-5 w-5 text-red-600" />
+              <p className="text-sm font-medium text-red-800">{error}</p>
+            </div>
+          )}
           <form action={createTransferAction} className="space-y-8">
             <input type="hidden" name="createdById" value={mockUserId} />
             

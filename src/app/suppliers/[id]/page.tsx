@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Mail, Phone, MapPin, FileText } from "lucide-react"
+import {  Mail, Phone, MapPin, FileText } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function SupplierDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -26,11 +27,7 @@ export default async function SupplierDetailPage({ params }: { params: { id: str
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/suppliers">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <h2 className="text-2xl font-bold tracking-tight">{supplier.name}</h2>
             {supplier.tradeName && <p className="text-muted-foreground">{supplier.tradeName}</p>}

@@ -5,8 +5,9 @@ import { localDb } from "@/lib/localdb"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, RefreshCw, CheckCircle2, CloudOff, Cloud, AlertCircle } from "lucide-react"
+import {  RefreshCw, CheckCircle2, CloudOff, Cloud, AlertCircle } from "lucide-react"
 import Link from "next/link"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function SyncPage() {
   const [isOnline, setIsOnline] = useState(true)
@@ -85,11 +86,7 @@ export default function SyncPage() {
   return (
     <div className="min-h-screen bg-accent p-4 font-sans max-w-lg mx-auto">
       <div className="flex items-center gap-3 mb-6">
-        <Link href="/collector">
-          <Button variant="ghost" size="icon" className="rounded-full bg-card shadow-sm">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <h1 className="text-xl font-bold">Status do Coletor</h1>
       </div>
 

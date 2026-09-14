@@ -5,19 +5,16 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, CheckCircle } from "lucide-react"
+import {  CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { fulfillRequestAction } from "../../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function FulfillmentForm({ request, userId }: any) {
   return (
     <>
       <div className="flex items-center gap-4">
-        <Link href={`/requests/${request.id}`}>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Atender Requisição {request.requestNumber}</h2>
           <p className="text-muted-foreground">Informe a quantidade a ser entregue e o local de retirada.</p>

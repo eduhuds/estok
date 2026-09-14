@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import {} from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { UserForm } from "./user-form"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function NewUserPage() {
   const roles = await db.role.findMany({
@@ -13,11 +14,7 @@ export default async function NewUserPage() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/users">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Novo Usuário</h2>
           <p className="text-muted-foreground">Cadastre um novo membro da equipe e defina suas permissões.</p>

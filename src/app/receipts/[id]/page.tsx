@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ArrowLeft, Clock, Package, FileText, User, Building, MapPin } from "lucide-react"
+import {  Clock, Package, FileText, User, Building, MapPin } from "lucide-react"
 import { ConfirmReceiptButton } from "./confirm-button"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function ReceiptDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession()
@@ -44,11 +45,7 @@ export default async function ReceiptDetailsPage({ params }: { params: Promise<{
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <Link href="/receipts">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
               Entrada {receipt.documentNumber ? `#${receipt.documentNumber}` : 'Sem Número'}

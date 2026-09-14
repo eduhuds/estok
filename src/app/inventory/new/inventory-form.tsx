@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Save, MapPin, Users } from "lucide-react"
+import {  Save, MapPin, Users } from "lucide-react"
 import Link from "next/link"
 import { createInventoryAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function InventoryForm({ warehouses, users, userId }: any) {
   const [selectedWarehouseId, setSelectedWarehouseId] = useState("")
@@ -19,11 +20,7 @@ export default function InventoryForm({ warehouses, users, userId }: any) {
   return (
     <>
       <div className="flex items-center gap-4">
-        <Link href="/inventory">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Novo Inventário</h2>
           <p className="text-muted-foreground">Configure uma nova contagem de estoque.</p>

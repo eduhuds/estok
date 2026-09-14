@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { UploadCloud, FileType, CheckCircle2 } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default function ImportPage() {
   return (
     <div className="space-y-6 max-w-4xl">
-      <div>
+      <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
         <h2 className="text-2xl font-bold tracking-tight">Importar Dados</h2>
         <p className="text-muted-foreground">Importe planilhas e arquivos do sistema legado ou KCollector antigo.</p>
       </div>
+        </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="border-blue-200 bg-blue-50/50 cursor-pointer hover:border-blue-400 transition-colors">

@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeft, Save, Plus, PackageX } from "lucide-react"
+import {  Save, Plus, PackageX } from "lucide-react"
 import Link from "next/link"
 import { createReturnAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function NewReturnPage() {
   const warehouses = await db.warehouse.findMany({ 
@@ -30,11 +31,7 @@ export default async function NewReturnPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/returns">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Devolução</h2>
           <p className="text-muted-foreground">Registre o retorno de materiais ao estoque.</p>

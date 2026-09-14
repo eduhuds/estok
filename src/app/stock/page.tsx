@@ -66,7 +66,7 @@ export default async function StockPage() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border/40 shadow-sm">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por código ou produto..." className="pl-9" />
@@ -79,7 +79,7 @@ export default async function StockPage() {
         </div>
       </div>
 
-      <div className="bg-card/40 backdrop-blur-md rounded-2xl border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border/50">
           {stockData.length === 0 ? (

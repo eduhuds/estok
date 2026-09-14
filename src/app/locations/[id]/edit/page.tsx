@@ -2,11 +2,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select } from "@/components/ui/select"
-import { ArrowLeft, Save } from "lucide-react"
+import {  Save } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { updateLocationAction } from "../../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function EditLocationPage({
   params,
@@ -33,11 +34,7 @@ export default async function EditLocationPage({
   return (
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-4">
-        <Link href="/locations">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Editar Localização</h2>
           <p className="text-muted-foreground">Altere os dados, reorganize a hierarquia ou inative a localização.</p>

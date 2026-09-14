@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { createPortal } from "react-dom"
-import { Bell, Menu, Search, ArrowLeft } from "lucide-react"
+import { Bell, Menu, Search } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { logoutAction } from "@/app/auth-actions"
@@ -20,6 +20,7 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
   const titleMap: Record<string, string> = {
     'new': 'Novo',
     'edit': 'Editar',
+    'dashboard': 'Painel Geral',
     'users': 'Usuários',
     'products': 'Produtos',
     'categories': 'Categorias',
@@ -30,13 +31,13 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
     'issues': 'Saídas',
     'requests': 'Requisições',
     'returns': 'Devoluções',
-    'inventory': 'Inventários',
+    'inventory': 'Auditorias',
     'collector': 'Coletor',
     'import': 'Importar',
     'export': 'Exportar',
     'reports': 'Relatórios',
-    'api': 'API',
-    'admin': 'Administração',
+    'api': 'API / Conectores',
+    'admin': 'Gestão Central',
     'settings': 'Configurações',
     'notifications': 'Notificações',
   }
@@ -45,14 +46,6 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
   const lastSegment = segments[segments.length - 1] || 'dashboard'
   const mappedTitle = titleMap[lastSegment] || lastSegment.replace('-', ' ')
   const titleFormatted = mappedTitle.charAt(0).toUpperCase() + mappedTitle.slice(1)
-
-  const rootPaths = [
-    '/dashboard', '/products', '/categories', '/units', '/locations', '/movements', 
-    '/receipts', '/issues', '/requests', '/returns', '/inventory', '/collector', 
-    '/import', '/export', '/reports', '/api', '/admin', '/admin/users', '/admin/settings', 
-    '/notifications'
-  ]
-  const showBackButton = !rootPaths.includes(pathname)
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-6 shadow-sm shadow-black/5">
@@ -63,28 +56,31 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
         >
           <Menu className="h-5 w-5" />
         </button>
-        {showBackButton && (
-          <button 
-            onClick={() => router.back()}
-            className="p-1.5 mr-1 text-muted-foreground hover:bg-muted rounded-full transition-colors hidden sm:block"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-        )}
+        {/* O botão de voltar agora fica ao lado dos títulos nas páginas */}
         <h1 className="text-xl font-bold tracking-tight text-foreground bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
           {titleFormatted}
         </h1>
       </div>
       
       <div className="flex items-center gap-4">
-        <div className="relative hidden sm:block">
+        <form 
+          className="relative hidden sm:block"
+          onSubmit={(e) => {
+            e.preventDefault()
+            const q = new FormData(e.currentTarget).get('q')
+            if (q) {
+              router.push(`/search?q=${encodeURIComponent(q as string)}`)
+            }
+          }}
+        >
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input 
-            type="text" 
+            type="search" 
+            name="q"
             placeholder="Busca global..." 
             className="h-9 w-64 rounded-full border border-border/50 bg-muted/50 pl-9 pr-4 text-sm transition-all focus:w-72 focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
-        </div>
+        </form>
         <ThemeToggle />
         <Link href="/notifications" className="relative p-2 text-muted-foreground hover:bg-accent rounded-md">
           <Bell className="h-5 w-5" />

@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Save, Plus, Trash2, Send } from "lucide-react"
+import {  Save, Plus, Trash2, Send } from "lucide-react"
 import Link from "next/link"
 import { createRequestAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 type RequestItemData = {
   id: string
@@ -46,11 +47,7 @@ export default function RequestForm({ users, warehouses, products }: any) {
   return (
     <>
       <div className="flex items-center gap-4">
-        <Link href="/requests">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Requisição</h2>
           <p className="text-muted-foreground">Solicite materiais ao almoxarifado.</p>

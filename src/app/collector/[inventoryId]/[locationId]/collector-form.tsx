@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ArrowLeft, Send, Scan, Plus, Minus, Trash2, Camera, X } from "lucide-react"
+import {  Send, Scan, Plus, Minus, Trash2, Camera, X } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { localDb } from "@/lib/localdb"
 import { Html5Qrcode } from "html5-qrcode"
+import { BackButton } from "@/components/ui/back-button"
 
 type CollectedItem = {
   productId: string
@@ -153,11 +154,7 @@ export default function CollectorForm({
       {/* Header */}
       <div className="bg-primary/95 backdrop-blur-md text-primary-foreground p-4 flex items-center justify-between shadow-md z-20">
         <div className="flex items-center gap-3">
-          <Link href="/collector">
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20 rounded-full transition-colors">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <h1 className="text-xl font-black tracking-tight">{locationCode}</h1>
             <p className="text-primary-foreground/80 text-xs font-medium">Coleta em Andamento</p>

@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Box, Package, Info, MapPin } from "lucide-react"
+import {  Box, Package, Info, MapPin } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function ProductStockPage({ params }: { params: { productId: string } }) {
   const { productId } = await params
@@ -35,11 +36,7 @@ export default async function ProductStockPage({ params }: { params: { productId
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/stock">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold tracking-tight">{product.name}</h2>

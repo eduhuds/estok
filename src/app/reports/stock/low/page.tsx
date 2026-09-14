@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function LowStockReportPage() {
   await requirePermissionPage('REPORT_VIEW')
@@ -23,16 +24,19 @@ export default async function LowStockReportPage() {
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <AlertTriangle className="h-6 w-6 text-amber-500" />
             Produtos em Baixo Estoque
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Itens que atingiram o limite mínimo ou estão zerados.</p>
         </div>
+        </div>
       </div>
 
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {lowStocks.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             Nenhum produto em baixo estoque no momento.

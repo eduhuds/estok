@@ -117,7 +117,7 @@ export default async function MovementsPage({
         }} 
       />
 
-      <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 overflow-hidden shadow-sm">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border/50">
           {movements.length === 0 ? (

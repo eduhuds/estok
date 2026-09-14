@@ -13,20 +13,21 @@ import {
   ClipboardList, 
   RotateCcw, 
   CheckSquare, 
-  AlertTriangle, 
+  AlertTriangle,
   BarChart3, 
   Users, 
   Shield, 
-  Settings, 
+  Settings,
   LogOut,
-  FolderSync
+  FolderSync,
+  HelpCircle
 } from "lucide-react"
 
 const menuGroups = [
   {
     title: "Menu Inicial",
     items: [
-      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { name: "Painel Geral", href: "/dashboard", icon: LayoutDashboard },
     ]
   },
   {
@@ -51,12 +52,12 @@ const menuGroups = [
   {
     title: "Inventário",
     items: [
-      { name: "Inventários", href: "/inventory", icon: ClipboardList },
+      { name: "Auditorias", href: "/inventory", icon: ClipboardList },
       { name: "Coletor (Scanner)", href: "/collector", icon: CheckSquare },
     ]
   },
   {
-    title: "Importação/Exportação",
+    title: "Integração",
     items: [
       { name: "Importar", href: "/import", icon: FolderSync },
       { name: "Exportar", href: "/export", icon: FolderSync },
@@ -66,13 +67,14 @@ const menuGroups = [
     title: "Sistema",
     items: [
       { name: "Relatórios", href: "/reports", icon: BarChart3 },
-      { name: "API / Integração", href: "/api", icon: Settings },
+      { name: "API / Conectores", href: "/api", icon: Settings },
+      { name: "Central de Ajuda", href: "/help", icon: HelpCircle },
     ]
   },
   {
     title: "Administração",
     items: [
-      { name: "Central Admin", href: "/admin", icon: Shield },
+      { name: "Gestão Central", href: "/admin", icon: Shield },
       { name: "Usuários", href: "/admin/users", icon: Users },
       { name: "Configurações", href: "/admin/settings", icon: Settings },
     ]
@@ -84,7 +86,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
   const pathname = usePathname()
 
   return (
-    <aside className="flex h-full w-full flex-col border-r border-border/50 bg-background/80 backdrop-blur-xl">
+    <aside className="flex h-full w-full flex-col border-r border-border/50 bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-indigo-950/90 dark:to-slate-950 shadow-xl backdrop-blur-xl">
       <div className="flex h-16 items-center border-b border-border/50 px-6 shrink-0">
         <div className="flex items-center gap-2 font-black text-xl text-primary tracking-tight">
           <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
@@ -130,7 +132,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
         </nav>
       </div>
 
-      <div className="border-t border-border/50 p-4 bg-background/50 shrink-0">
+      <div className="border-t border-border/50 p-4 bg-transparent shrink-0">
         <div className="flex items-center gap-3 rounded-xl px-3 py-3 transition-colors hover:bg-muted/50 cursor-pointer">
           <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shadow-inner shrink-0">
             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}

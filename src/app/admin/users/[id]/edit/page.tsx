@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import {} from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function EditUserPage({ params }: { params: { id: string } }) {
   const user = await db.user.findUnique({
@@ -18,11 +19,7 @@ export default async function EditUserPage({ params }: { params: { id: string } 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/users">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Editar Usuário</h2>
           <p className="text-muted-foreground">{user.name}</p>

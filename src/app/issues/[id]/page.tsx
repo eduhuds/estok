@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ArrowLeft, Package, User, CheckCircle, Clock } from "lucide-react"
+import {  Package, User, CheckCircle, Clock } from "lucide-react"
 import Link from "next/link"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function IssueDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -48,11 +49,7 @@ export default async function IssueDetailPage({ params }: { params: { id: string
     <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/issues">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <div className="flex items-center gap-3">
               <h2 className="text-2xl font-bold tracking-tight">Saída Ref: {req.requestNumber}</h2>

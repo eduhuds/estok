@@ -3,10 +3,11 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle, XCircle, Package, Play } from "lucide-react"
+import {  CheckCircle, XCircle, Package, Play } from "lucide-react"
 import Link from "next/link"
 import { approveRequestAction, rejectRequestAction, startSeparationAction, cancelRequestAction } from "../actions"
 import { CancelRequestButton } from "./cancel-button"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function RequestDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -51,11 +52,7 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/requests">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
+          <BackButton />
           <div>
             <div className="flex items-center gap-3">
               <h2 className="text-2xl font-bold tracking-tight">Requisição {req.requestNumber}</h2>

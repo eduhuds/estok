@@ -4,11 +4,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Search, UserPlus } from "lucide-react"
 import { db } from "@/lib/db"
+import { SearchInput } from "@/components/ui/search-input"
 import Link from "next/link"
 import { UserActions } from "./user-actions"
 
-export default async function UsersPage() {
+export default async function UsersPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const resolvedParams = await searchParams
+  const q = resolvedParams?.q || ''
   const users = await db.user.findMany({
+    where: q ? { OR: [{ name: { contains: q, mode: 'insensitive' } }, { email: { contains: q, mode: 'insensitive' } }] } : undefined,
     include: {
       roles: true
     },
@@ -30,14 +34,14 @@ export default async function UsersPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-card/50 backdrop-blur-sm p-4 rounded-2xl border border-border/50 shadow-sm transition-all hover:border-primary/20">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card/95 backdrop-blur-xl p-4 rounded-2xl border border-border/40 shadow-sm">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-3 h-4 w-4 text-primary/60" />
           <Input placeholder="Buscar por nome ou e-mail..." className="pl-10 rounded-full border-border/50 bg-muted/50 focus-visible:ring-primary transition-all focus:bg-background" />
         </div>
       </div>
 
-      <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 overflow-hidden shadow-sm">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         {/* Mobile View: Cards */}
         <div className="md:hidden divide-y divide-border/50">
           {users.map((user) => (

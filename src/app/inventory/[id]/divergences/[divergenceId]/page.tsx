@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle2, AlertTriangle, XCircle, ArrowRight } from "lucide-react"
+import {  CheckCircle2, AlertTriangle, XCircle, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import DivergenceForm from "./divergence-form"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function DivergenceDetailsPage({ params }: { params: { id: string, divergenceId: string } }) {
   const { id, divergenceId } = await params
@@ -37,11 +38,7 @@ export default async function DivergenceDetailsPage({ params }: { params: { id: 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="flex items-center gap-4">
-        <Link href={`/inventory/${id}/divergences`}>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-bold tracking-tight">Análise de Divergência</h2>

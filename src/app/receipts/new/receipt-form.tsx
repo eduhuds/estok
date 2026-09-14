@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, Save, Plus, Trash2, CheckCircle } from "lucide-react"
+import {  Save, Plus, Trash2, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { createReceiptAction } from "../actions"
+import { BackButton } from "@/components/ui/back-button"
 
 type ItemData = {
   id: string
@@ -41,11 +42,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
   return (
     <>
       <div className="flex items-center gap-4">
-        <Link href="/receipts">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Entrada</h2>
           <p className="text-muted-foreground">Registre o recebimento de materiais.</p>

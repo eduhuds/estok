@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Save, Settings2 } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function SettingsPage() {
   await requirePermissionPage('CONFIG_MANAGE')
@@ -17,12 +18,15 @@ export default async function SettingsPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Settings2 className="h-6 w-6 text-indigo-600" />
             Configurações do Sistema
           </h1>
           <p className="text-muted-foreground text-sm mt-1">Gerencie os parâmetros globais de funcionamento do Estok.</p>
+        </div>
         </div>
         <Button className="flex items-center gap-2">
           <Save className="h-4 w-4" />

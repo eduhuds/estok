@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle2, AlertTriangle } from "lucide-react"
+import {  CheckCircle2, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { BackButton } from "@/components/ui/back-button"
 
 export default async function DivergencesPage({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -31,11 +32,7 @@ export default async function DivergencesPage({ params }: { params: { id: string
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href={`/inventory/${inv.id}`}>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-        </Link>
+        <BackButton />
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Divergências Encontradas</h2>
           <p className="text-muted-foreground">Resultado da conferência entre sistema e contagem física.</p>
@@ -63,7 +60,7 @@ export default async function DivergencesPage({ params }: { params: { id: string
         </Card>
       </div>
 
-      <div className="bg-card rounded-lg border border-border overflow-hidden">
+      <div className="bg-card/95 backdrop-blur-xl rounded-2xl border border-border/40 shadow-xl shadow-indigo-500/5 overflow-hidden transition-all duration-200">
         <Table>
           <TableHeader>
             <TableRow>
