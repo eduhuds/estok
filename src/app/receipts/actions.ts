@@ -4,6 +4,7 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { getSession } from "@/lib/auth"
 import { createStockMovement } from "@/lib/stock"
+import { logAudit } from "@/lib/audit"
 
 export async function createReceiptAction(formData: FormData) {
   const session = await getSession()
@@ -51,7 +52,7 @@ export async function createReceiptAction(formData: FormData) {
     }
 
     if (actionType === "DRAFT") {
-      await db.stockReceipt.create({
+      const receipt = await db.stockReceipt.create({
         data: {
           supplierId,
           warehouseId,
@@ -66,6 +67,7 @@ export async function createReceiptAction(formData: FormData) {
           }
         }
       })
+      await logAudit("RECEIPT_CREATED", "StockReceipt", receipt.id, { status: "DRAFT" })
     } else if (actionType === "COMPLETED") {
       // Cria o recebimento, itens, movimentos e atualiza estoque (tudo numa transaction manual ou sequencial)
       // Como o Prisma Client permite transações iterativas:
@@ -103,6 +105,7 @@ export async function createReceiptAction(formData: FormData) {
             performedById: session.userId
           }, tx)
         }
+        await logAudit("RECEIPT_CREATED", "StockReceipt", receipt.id, { status: "COMPLETED" })
       })
     }
 
@@ -112,4 +115,55 @@ export async function createReceiptAction(formData: FormData) {
   }
 
   redirect("/receipts")
+}
+
+export async function confirmReceiptAction(formData: FormData) {
+  const session = await getSession()
+  if (!session) throw new Error("Não autorizado")
+
+  const receiptId = formData.get("receiptId") as string
+  if (!receiptId) throw new Error("ID do recebimento não informado")
+
+  const receipt = await db.stockReceipt.findUnique({
+    where: { id: receiptId },
+    include: { items: true }
+  })
+
+  if (!receipt) throw new Error("Recebimento não encontrado")
+  if (receipt.status !== "DRAFT") throw new Error("Apenas recebimentos em rascunho podem ser confirmados")
+
+  try {
+    await db.$transaction(async (tx) => {
+      await tx.stockReceipt.update({
+        where: { id: receipt.id },
+        data: {
+          status: 'COMPLETED',
+          receivedAt: new Date()
+        }
+      })
+
+      for (const item of receipt.items) {
+        await createStockMovement({
+          productId: item.productId,
+          warehouseId: receipt.warehouseId,
+          locationId: item.locationId,
+          type: 'ENTRY',
+          quantity: item.quantity,
+          unitCost: item.unitCost ? Number(item.unitCost) : null,
+          totalCost: item.totalCost ? Number(item.totalCost) : null,
+          referenceType: 'RECEIPT',
+          referenceId: receipt.id,
+          documentNumber: receipt.documentNumber,
+          performedById: session.userId
+        }, tx)
+      }
+    })
+
+    await logAudit("RECEIPT_CONFIRMED", "StockReceipt", receipt.id, { status: "COMPLETED" })
+  } catch (error: any) {
+    console.error("Erro ao confirmar recebimento", error)
+    throw new Error(error.message || "Erro ao processar a confirmação do recebimento no estoque.")
+  }
+
+  redirect(`/receipts/${receipt.id}`)
 }

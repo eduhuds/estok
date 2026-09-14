@@ -16,7 +16,7 @@ export default function NewSupplierPage() {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Novo Fornecedor</h2>
-          <p className="text-gray-500">Cadastre um novo fornecedor de materiais.</p>
+          <p className="text-muted-foreground">Cadastre um novo fornecedor de materiais.</p>
         </div>
       </div>
 

@@ -30,7 +30,7 @@ export default async function TransfersPage() {
           </Link>
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Transferências</h2>
-            <p className="text-gray-500">Movimentações entre almoxarifados ou localizações.</p>
+            <p className="text-muted-foreground">Movimentações entre almoxarifados ou localizações.</p>
           </div>
         </div>
         <Link href="/transfers/new">
@@ -41,7 +41,7 @@ export default async function TransfersPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -57,7 +57,7 @@ export default async function TransfersPage() {
           <TableBody>
             {transfers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                   <ArrowRightLeft className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   Nenhuma transferência registrada.
                 </TableCell>
@@ -68,11 +68,11 @@ export default async function TransfersPage() {
                   <TableCell className="font-medium">{trf.transferNumber}</TableCell>
                   <TableCell>
                     <div className="font-medium">{trf.sourceLocation.code}</div>
-                    <div className="text-xs text-gray-500">{trf.sourceWarehouse.name}</div>
+                    <div className="text-xs text-muted-foreground">{trf.sourceWarehouse.name}</div>
                   </TableCell>
                   <TableCell>
                     <div className="font-medium">{trf.destinationLocation.code}</div>
-                    <div className="text-xs text-gray-500">{trf.destinationWarehouse.name}</div>
+                    <div className="text-xs text-muted-foreground">{trf.destinationWarehouse.name}</div>
                   </TableCell>
                   <TableCell className="text-center">{trf._count.items}</TableCell>
                   <TableCell>{trf.createdBy.name}</TableCell>

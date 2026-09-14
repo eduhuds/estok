@@ -50,11 +50,11 @@ export default async function ReportsHubPage() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
           <BarChart3 className="h-8 w-8 text-emerald-600" />
           Central de Relatórios
         </h1>
-        <p className="text-gray-500 mt-2">Consultas avançadas e inteligência operacional para tomada de decisão.</p>
+        <p className="text-muted-foreground mt-2">Consultas avançadas e inteligência operacional para tomada de decisão.</p>
       </div>
 
       <div className="space-y-6">
@@ -64,7 +64,7 @@ export default async function ReportsHubPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {group.items.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-gray-200 hover:border-emerald-300">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-border hover:border-emerald-300">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2 text-gray-800">
                         <item.icon className="h-5 w-5 text-emerald-600" />
@@ -72,7 +72,7 @@ export default async function ReportsHubPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-500">{item.description}</p>
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
                     </CardContent>
                   </Card>
                 </Link>

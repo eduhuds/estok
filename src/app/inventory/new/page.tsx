@@ -9,11 +9,11 @@ export default async function NewInventoryPage() {
   
   const users = await db.user.findMany({
     where: { status: 'ACTIVE' },
-    select: { id: true, name: true, role: { select: { name: true } } }
+    select: { id: true, name: true, roles: { select: { name: true } } }
   })
 
   // Gestor logado mock
-  const userGestor = users.find(u => u.role.name === 'GESTOR')
+  const userGestor = users.find(u => u.roles.some((r: any) => r.name === 'GESTOR'))
   const mockUserId = userGestor?.id || users[0]?.id || ""
 
   return (

@@ -33,7 +33,7 @@ export default async function SupplierDetailPage({ params }: { params: { id: str
           </Link>
           <div>
             <h2 className="text-2xl font-bold tracking-tight">{supplier.name}</h2>
-            {supplier.tradeName && <p className="text-gray-500">{supplier.tradeName}</p>}
+            {supplier.tradeName && <p className="text-muted-foreground">{supplier.tradeName}</p>}
           </div>
         </div>
         <Badge variant={supplier.status === 'ACTIVE' ? 'success' : 'secondary'}>
@@ -49,25 +49,25 @@ export default async function SupplierDetailPage({ params }: { params: { id: str
           <CardContent className="space-y-4">
             {supplier.document && (
               <div className="flex items-center gap-3 text-sm">
-                <FileText className="h-4 w-4 text-gray-400" />
+                <FileText className="h-4 w-4 text-muted-foreground" />
                 <span>{supplier.document}</span>
               </div>
             )}
             {supplier.email && (
               <div className="flex items-center gap-3 text-sm">
-                <Mail className="h-4 w-4 text-gray-400" />
+                <Mail className="h-4 w-4 text-muted-foreground" />
                 <a href={`mailto:${supplier.email}`} className="text-blue-600 hover:underline">{supplier.email}</a>
               </div>
             )}
             {supplier.phone && (
               <div className="flex items-center gap-3 text-sm">
-                <Phone className="h-4 w-4 text-gray-400" />
+                <Phone className="h-4 w-4 text-muted-foreground" />
                 <span>{supplier.phone}</span>
               </div>
             )}
             {(supplier.address || supplier.city) && (
               <div className="flex items-start gap-3 text-sm">
-                <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div>
                   <p>{supplier.address}</p>
                   <p>{supplier.city}{supplier.state ? ` - ${supplier.state}` : ''} {supplier.zipCode}</p>
@@ -77,7 +77,7 @@ export default async function SupplierDetailPage({ params }: { params: { id: str
             {supplier.notes && (
               <div className="pt-4 border-t mt-4">
                 <p className="text-sm font-medium mb-1">Observações:</p>
-                <p className="text-sm text-gray-600">{supplier.notes}</p>
+                <p className="text-sm text-muted-foreground">{supplier.notes}</p>
               </div>
             )}
           </CardContent>
@@ -89,7 +89,7 @@ export default async function SupplierDetailPage({ params }: { params: { id: str
           </CardHeader>
           <CardContent>
             {supplier.receipts.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 text-sm">
+              <div className="text-center py-8 text-muted-foreground text-sm">
                 Nenhum recebimento registrado para este fornecedor.
               </div>
             ) : (

@@ -16,7 +16,7 @@ const Switch = React.forwardRef<
       {...props}
     />
     <div className="h-5 w-9 rounded-full bg-gray-200 peer-checked:bg-blue-600 transition-colors"></div>
-    <div className="absolute left-0 inline-block h-5 w-5 transform rounded-full bg-white border border-gray-200 shadow-sm transition-transform peer-checked:translate-x-4"></div>
+    <div className="absolute left-0 inline-block h-5 w-5 transform rounded-full bg-card border border-border shadow-sm transition-transform peer-checked:translate-x-4"></div>
   </div>
 ))
 Switch.displayName = "Switch"

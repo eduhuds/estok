@@ -48,7 +48,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Entrada</h2>
-          <p className="text-gray-500">Registre o recebimento de materiais.</p>
+          <p className="text-muted-foreground">Registre o recebimento de materiais.</p>
         </div>
       </div>
 
@@ -109,16 +109,16 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
               )}
 
               {items.length === 0 && warehouseId && (
-                <div className="text-center py-8 text-gray-500 border rounded-md border-dashed">
+                <div className="text-center py-8 text-muted-foreground border rounded-md border-dashed">
                   Nenhum item adicionado. Clique no botão acima para adicionar.
                 </div>
               )}
 
               <div className="space-y-3">
                 {items.map((item) => (
-                  <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-gray-50">
+                  <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-muted">
                     <div className="col-span-12 md:col-span-4 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Produto *</label>
+                      <label className="text-xs font-medium text-muted-foreground">Produto *</label>
                       <Select 
                         name="item_productId" 
                         required 
@@ -133,7 +133,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                     </div>
                     
                     <div className="col-span-6 md:col-span-2 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Qtd *</label>
+                      <label className="text-xs font-medium text-muted-foreground">Qtd *</label>
                       <Input 
                         name="item_quantity" 
                         type="number" 
@@ -145,7 +145,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                     </div>
                     
                     <div className="col-span-6 md:col-span-2 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Custo Unitário (R$)</label>
+                      <label className="text-xs font-medium text-muted-foreground">Custo Unitário (R$)</label>
                       <Input 
                         name="item_unitCost" 
                         type="number" 
@@ -157,7 +157,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                     </div>
 
                     <div className="col-span-12 md:col-span-3 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Localização *</label>
+                      <label className="text-xs font-medium text-muted-foreground">Localização *</label>
                       <Select 
                         name="item_locationId" 
                         required

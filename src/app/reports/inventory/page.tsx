@@ -37,23 +37,23 @@ export default async function InventoryReportPage({ searchParams }: { searchPara
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <ClipboardList className="h-6 w-6 text-emerald-600" />
             Relatório de Inventários
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Acompanhamento e apuração de todos os inventários.</p>
+          <p className="text-muted-foreground text-sm mt-1">Acompanhamento e apuração de todos os inventários.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {inventories.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhum inventário registrado.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Código</TableHead>
                   <TableHead>Data Criação</TableHead>
@@ -68,18 +68,18 @@ export default async function InventoryReportPage({ searchParams }: { searchPara
               <TableBody>
                 {inventories.map((inv) => (
                   <TableRow key={inv.id}>
-                    <TableCell className="font-medium text-gray-900">{inv.code}</TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="font-medium text-foreground">{inv.code}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
                       {format(inv.createdAt, "dd/MM/yyyy")}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">{inv.warehouse.name}</TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{inv.warehouse.name}</TableCell>
                     <TableCell>
                       <Badge variant={inv.status === 'COMPLETED' ? 'success' : 'outline'}>
                         {inv.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right text-sm text-gray-600">{inv._count.locations}</TableCell>
-                    <TableCell className="text-right text-sm text-gray-600">{inv._count.collections}</TableCell>
+                    <TableCell className="text-right text-sm text-muted-foreground">{inv._count.locations}</TableCell>
+                    <TableCell className="text-right text-sm text-muted-foreground">{inv._count.collections}</TableCell>
                     <TableCell className="text-right font-bold text-red-600">{inv._count.divergences}</TableCell>
                     <TableCell className="text-right">
                       <Link href={`/inventory/${inv.id}`}>
@@ -98,11 +98,11 @@ export default async function InventoryReportPage({ searchParams }: { searchPara
 
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-4">
-          <a href={`/reports/inventory?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <a href={`/reports/inventory?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Anterior
           </a>
-          <span className="px-4 py-2 text-gray-500">Página {page} de {totalPages}</span>
-          <a href={`/reports/inventory?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <span className="px-4 py-2 text-muted-foreground">Página {page} de {totalPages}</span>
+          <a href={`/reports/inventory?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Próxima
           </a>
         </div>

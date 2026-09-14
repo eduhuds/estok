@@ -24,23 +24,23 @@ export default async function LowStockReportPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <AlertTriangle className="h-6 w-6 text-amber-500" />
             Produtos em Baixo Estoque
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Itens que atingiram o limite mínimo ou estão zerados.</p>
+          <p className="text-muted-foreground text-sm mt-1">Itens que atingiram o limite mínimo ou estão zerados.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {lowStocks.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhum produto em baixo estoque no momento.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Produto</TableHead>
                   <TableHead>Código</TableHead>
@@ -58,14 +58,14 @@ export default async function LowStockReportPage() {
 
                   return (
                     <TableRow key={stock.id}>
-                      <TableCell className="font-medium text-gray-900">{stock.product.name}</TableCell>
-                      <TableCell className="text-sm text-gray-500">{stock.product.code}</TableCell>
+                      <TableCell className="font-medium text-foreground">{stock.product.name}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{stock.product.code}</TableCell>
                       <TableCell className="text-sm">{stock.warehouse.name}</TableCell>
-                      <TableCell className="text-sm font-mono bg-gray-50">{stock.location.code}</TableCell>
-                      <TableCell className="text-right font-bold text-gray-900">
-                        {stock.quantity} <span className="text-xs text-gray-400 font-normal">{stock.product.unit.code}</span>
+                      <TableCell className="text-sm font-mono bg-muted">{stock.location.code}</TableCell>
+                      <TableCell className="text-right font-bold text-foreground">
+                        {stock.quantity} <span className="text-xs text-muted-foreground font-normal">{stock.product.unit.code}</span>
                       </TableCell>
-                      <TableCell className="text-right text-gray-500">{stock.product.minimumStock}</TableCell>
+                      <TableCell className="text-right text-muted-foreground">{stock.product.minimumStock}</TableCell>
                       <TableCell className="text-center">
                         {status === 'LOW' && <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Baixo</Badge>}
                         {status === 'OUT_OF_STOCK' && <Badge variant="destructive">Zerado</Badge>}

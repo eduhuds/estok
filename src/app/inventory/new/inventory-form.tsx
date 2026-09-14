@@ -26,7 +26,7 @@ export default function InventoryForm({ warehouses, users, userId }: any) {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Novo Inventário</h2>
-          <p className="text-gray-500">Configure uma nova contagem de estoque.</p>
+          <p className="text-muted-foreground">Configure uma nova contagem de estoque.</p>
         </div>
       </div>
 
@@ -61,15 +61,15 @@ export default function InventoryForm({ warehouses, users, userId }: any) {
 
             <div className="space-y-4">
               <h3 className="text-lg font-medium border-b pb-2 flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-gray-500" /> Locais a Contar
+                <MapPin className="h-4 w-4 text-muted-foreground" /> Locais a Contar
               </h3>
-              <p className="text-sm text-gray-500">Selecione os corredores ou posições que farão parte desta contagem.</p>
+              <p className="text-sm text-muted-foreground">Selecione os corredores ou posições que farão parte desta contagem.</p>
               
               {selectedWarehouseId ? (
                 locations.length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-gray-50 p-4 rounded-lg border">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-muted p-4 rounded-lg border">
                     {locations.map((loc: any) => (
-                      <label key={loc.id} className="flex items-center gap-2 bg-white p-3 rounded-md border cursor-pointer hover:bg-indigo-50">
+                      <label key={loc.id} className="flex items-center gap-2 bg-card p-3 rounded-md border cursor-pointer hover:bg-indigo-50">
                         <input type="checkbox" name={`loc_${loc.id}`} defaultChecked className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4" />
                         <span className="font-medium text-sm">{loc.code}</span>
                       </label>
@@ -81,7 +81,7 @@ export default function InventoryForm({ warehouses, users, userId }: any) {
                   </div>
                 )
               ) : (
-                <div className="text-sm text-gray-500 p-4 bg-gray-50 rounded-lg border">
+                <div className="text-sm text-muted-foreground p-4 bg-muted rounded-lg border">
                   Selecione um almoxarifado primeiro.
                 </div>
               )}
@@ -89,17 +89,17 @@ export default function InventoryForm({ warehouses, users, userId }: any) {
 
             <div className="space-y-4">
               <h3 className="text-lg font-medium border-b pb-2 flex items-center gap-2">
-                <Users className="h-4 w-4 text-gray-500" /> Operadores de Coleta
+                <Users className="h-4 w-4 text-muted-foreground" /> Operadores de Coleta
               </h3>
-              <p className="text-sm text-gray-500">Selecione os usuários que usarão o coletor neste inventário.</p>
+              <p className="text-sm text-muted-foreground">Selecione os usuários que usarão o coletor neste inventário.</p>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-gray-50 p-4 rounded-lg border">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-muted p-4 rounded-lg border">
                 {users.map((u: any) => (
-                  <label key={u.id} className="flex items-center gap-2 bg-white p-3 rounded-md border cursor-pointer hover:bg-indigo-50">
+                  <label key={u.id} className="flex items-center gap-2 bg-card p-3 rounded-md border cursor-pointer hover:bg-indigo-50">
                     <input type="checkbox" name={`op_${u.id}`} className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4" />
                     <div>
                       <span className="font-medium text-sm block">{u.name}</span>
-                      <span className="text-xs text-gray-500">{u.role.name}</span>
+                      <span className="text-xs text-muted-foreground">{u.roles.map((r: any) => r.name).join(', ')}</span>
                     </div>
                   </label>
                 ))}

@@ -9,7 +9,7 @@ export default function ApiPage() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">API / Integrações</h2>
-          <p className="text-gray-500">Conecte o sistema a outros serviços corporativos e ERPs.</p>
+          <p className="text-muted-foreground">Conecte o sistema a outros serviços corporativos e ERPs.</p>
         </div>
         <Badge variant="warning" className="px-3 py-1 text-sm">
           Em desenvolvimento
@@ -18,7 +18,7 @@ export default function ApiPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="relative overflow-hidden border-dashed">
-          <div className="absolute inset-0 bg-gray-50/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-muted/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
             <Badge className="bg-gray-900">Em Breve</Badge>
           </div>
           <CardHeader>
@@ -32,7 +32,7 @@ export default function ApiPage() {
         </Card>
 
         <Card className="relative overflow-hidden border-dashed">
-          <div className="absolute inset-0 bg-gray-50/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-muted/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
             <Badge className="bg-gray-900">Em Breve</Badge>
           </div>
           <CardHeader>
@@ -46,7 +46,7 @@ export default function ApiPage() {
         </Card>
 
         <Card className="relative overflow-hidden border-dashed">
-          <div className="absolute inset-0 bg-gray-50/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
+          <div className="absolute inset-0 bg-muted/50 backdrop-blur-[1px] z-10 flex items-center justify-center">
             <Badge className="bg-gray-900">Em Breve</Badge>
           </div>
           <CardHeader>

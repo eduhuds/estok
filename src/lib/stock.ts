@@ -1,5 +1,6 @@
 import { db } from "./db"
 import { Prisma } from "@prisma/client"
+import { logAudit } from "./audit"
 
 export type StockMovementType = 'ENTRY' | 'EXIT' | 'ADJUSTMENT_IN' | 'ADJUSTMENT_OUT' | 'TRANSFER_IN' | 'TRANSFER_OUT' | 'RETURN'
 
@@ -162,6 +163,11 @@ export async function deliverMaterialRequest(requestId: string, userId: string, 
         completedAt: allFulfilled ? new Date() : undefined
       }
     })
+
+    // Emite log audit via background/transactionless ou manual
+    try {
+      await logAudit("REQUEST_FULFILLED", "MaterialRequest", requestId, { status: newStatus }, userId)
+    } catch(e) {}
 
     return updatedRequest
   })

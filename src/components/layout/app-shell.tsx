@@ -6,7 +6,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
   const session = await getSession()
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 font-sans">
+    <div className="flex h-screen overflow-hidden bg-muted font-sans">
       <div className="hidden lg:block">
         <Sidebar user={session} />
       </div>

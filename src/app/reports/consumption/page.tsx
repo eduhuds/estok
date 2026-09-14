@@ -37,23 +37,23 @@ export default async function ConsumptionReportPage() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <BarChart3 className="h-6 w-6 text-emerald-600" />
             Ranking de Consumo (Curva ABC)
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Produtos mais requisitados e entregues na operação.</p>
+          <p className="text-muted-foreground text-sm mt-1">Produtos mais requisitados e entregues na operação.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {enrichedData.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhum consumo registrado.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead className="w-[80px]">Rank</TableHead>
                   <TableHead>Produto</TableHead>
@@ -65,20 +65,20 @@ export default async function ConsumptionReportPage() {
               <TableBody>
                 {enrichedData.map((item, index) => (
                   <TableRow key={item.productId}>
-                    <TableCell className="font-bold text-gray-400">
+                    <TableCell className="font-bold text-muted-foreground">
                       #{index + 1}
                     </TableCell>
-                    <TableCell className="font-medium text-gray-900">
+                    <TableCell className="font-medium text-foreground">
                       {item.product?.name}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-muted-foreground">
                       {item.product?.code}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-500">
+                    <TableCell className="text-sm text-muted-foreground">
                       {item.product?.category?.name}
                     </TableCell>
                     <TableCell className="text-right font-bold text-emerald-600 text-lg">
-                      {item._sum.deliveredQuantity} <span className="text-xs text-gray-400 font-normal">{item.product?.unit?.code}</span>
+                      {item._sum.deliveredQuantity} <span className="text-xs text-muted-foreground font-normal">{item.product?.unit?.code}</span>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -9,9 +9,9 @@ function Badge({ className, variant = "default", ...props }: BadgeProps) {
   
   const variants = {
     default: "border-transparent bg-gray-900 text-gray-50 hover:bg-gray-900/80",
-    secondary: "border-transparent bg-gray-100 text-gray-900 hover:bg-gray-100/80",
+    secondary: "border-transparent bg-accent text-foreground hover:bg-accent/80",
     destructive: "border-transparent bg-red-500 text-gray-50 hover:bg-red-500/80",
-    outline: "text-gray-950",
+    outline: "text-foreground",
     success: "border-transparent bg-emerald-100 text-emerald-800 hover:bg-emerald-100/80",
     warning: "border-transparent bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80",
   }

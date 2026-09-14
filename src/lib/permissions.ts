@@ -16,13 +16,13 @@ export async function hasPermission(permissionKey: PermissionKey): Promise<boole
   if (!session) return false
 
   // ADMIN sempre tem acesso a tudo
-  if (session.role === 'ADMIN') return true
+  if (session.roles?.includes('ADMIN')) return true
 
   // Busca permissões do usuário
   const user = await db.user.findUnique({
     where: { id: session.userId },
     include: {
-      role: {
+      roles: {
         include: {
           permissions: {
             include: {
@@ -36,7 +36,8 @@ export async function hasPermission(permissionKey: PermissionKey): Promise<boole
 
   if (!user || user.status !== 'ACTIVE') return false
 
-  const hasPerm = user.role.permissions.some(rp => rp.permission.key === permissionKey)
+  const allPermissions = user.roles.flatMap((role: any) => role.permissions)
+  const hasPerm = allPermissions.some((rp: any) => rp.permission.key === permissionKey)
   return hasPerm
 }
 

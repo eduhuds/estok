@@ -21,7 +21,7 @@ export default async function RequestsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Requisições de Material</h2>
-          <p className="text-gray-500">Gerencie solicitações, separação e entregas de materiais.</p>
+          <p className="text-muted-foreground">Gerencie solicitações, separação e entregas de materiais.</p>
         </div>
         <Link href="/requests/new">
           <Button className="flex items-center gap-2">
@@ -31,9 +31,9 @@ export default async function RequestsPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por número ou solicitante..." className="pl-9" />
         </div>
         <div className="flex gap-2">
@@ -44,8 +44,80 @@ export default async function RequestsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <Table>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        {/* Mobile View: Cards */}
+        <div className="md:hidden divide-y divide-border">
+          {requests.length === 0 ? (
+            <div className="p-6 text-center text-muted-foreground">
+              Nenhuma requisição encontrada.
+            </div>
+          ) : (
+            requests.map((req) => {
+              let statusColor = "default"
+              let statusLabel = req.status
+              if (req.status === 'DRAFT') { statusColor = "secondary"; statusLabel = "Rascunho" }
+              if (req.status === 'PENDING_APPROVAL') { statusColor = "warning"; statusLabel = "Pendente" }
+              if (req.status === 'APPROVED') { statusColor = "success"; statusLabel = "Aprovado" }
+              if (req.status === 'IN_SEPARATION') { statusColor = "default"; statusLabel = "Em Separação" }
+              if (req.status === 'PARTIALLY_FULFILLED') { statusColor = "default"; statusLabel = "Parcial" }
+              if (req.status === 'FULFILLED') { statusColor = "outline"; statusLabel = "Atendido" }
+              if (req.status === 'REJECTED' || req.status === 'CANCELLED') { statusColor = "destructive"; statusLabel = req.status === 'REJECTED' ? 'Rejeitado' : 'Cancelado' }
+
+              let prioColor = "text-muted-foreground"
+              if (req.priority === 'HIGH') prioColor = "text-orange-500 font-semibold"
+              if (req.priority === 'URGENT') prioColor = "text-red-600 font-bold"
+
+              return (
+                <div key={req.id} className="p-4 space-y-3 bg-card hover:bg-muted/30 transition-colors">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase">
+                        Req: {req.requestNumber}
+                      </span>
+                      <span className="font-bold text-base text-foreground leading-tight">
+                        {req.requester.name}
+                      </span>
+                    </div>
+                    {/* @ts-expect-error: Badge variant */}
+                    <Badge variant={statusColor} className="text-[10px]">
+                      {statusLabel}
+                    </Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Data</span>
+                      <span className="font-medium text-foreground">
+                        {req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('pt-BR') : '-'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Prioridade</span>
+                      <span className={`font-medium ${prioColor}`}>
+                        {req.priority === 'LOW' ? 'Baixa' : req.priority === 'NORMAL' ? 'Normal' : req.priority === 'HIGH' ? 'Alta' : 'Urgente'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">{req._count.items}</span> itens
+                    </div>
+                    <Link href={`/requests/${req.id}`}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreHorizontal className="h-4 w-4 text-primary" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+
+        {/* Desktop View: Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Número</TableHead>
@@ -61,7 +133,7 @@ export default async function RequestsPage() {
           <TableBody>
             {requests.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   Nenhuma requisição encontrada.
                 </TableCell>
               </TableRow>
@@ -77,7 +149,7 @@ export default async function RequestsPage() {
                 if (req.status === 'FULFILLED') { statusColor = "outline"; statusLabel = "Atendido" }
                 if (req.status === 'REJECTED' || req.status === 'CANCELLED') { statusColor = "destructive"; statusLabel = req.status === 'REJECTED' ? 'Rejeitado' : 'Cancelado' }
 
-                let prioColor = "text-gray-500"
+                let prioColor = "text-muted-foreground"
                 if (req.priority === 'HIGH') prioColor = "text-orange-500 font-semibold"
                 if (req.priority === 'URGENT') prioColor = "text-red-600 font-bold"
 
@@ -112,6 +184,7 @@ export default async function RequestsPage() {
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )

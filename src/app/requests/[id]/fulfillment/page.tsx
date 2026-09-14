@@ -28,7 +28,7 @@ export default async function FulfillmentPage({ params }: { params: { id: string
   if (!req) notFound()
 
   // Em produção, buscar da sessão real
-  const userAlmox = await db.user.findFirst({ where: { role: { name: 'ALMOXARIFE' } } })
+  const userAlmox = await db.user.findFirst({ where: { roles: { some: { name: 'ALMOXARIFE' } } } })
   const mockUserId = userAlmox?.id || ""
 
   return (

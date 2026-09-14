@@ -13,8 +13,7 @@ model User {
   name                 String
   email                String                @unique
   passwordHash         String
-  roleId               String
-  role                 Role                  @relation(fields: [roleId], references: [id])
+  roles                Role[]
   status               String                @default("ACTIVE") // ACTIVE, INACTIVE
   
   movementsPerformed   StockMovement[]
@@ -158,6 +157,10 @@ model WarehouseLocation {
   name                 String
   description          String?
   status               String                @default("ACTIVE")
+  
+  parentId             String?
+  parent               WarehouseLocation?    @relation("LocationHierarchy", fields: [parentId], references: [id])
+  children             WarehouseLocation[]   @relation("LocationHierarchy")
   
   products             Product[]
   stocks               Stock[]

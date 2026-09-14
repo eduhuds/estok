@@ -53,7 +53,7 @@ export default function RequestForm({ users, warehouses, products }: any) {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Requisição</h2>
-          <p className="text-gray-500">Solicite materiais ao almoxarifado.</p>
+          <p className="text-muted-foreground">Solicite materiais ao almoxarifado.</p>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function RequestForm({ users, warehouses, products }: any) {
                   <Select name="requesterId" required>
                     <option value="">Selecione...</option>
                     {users.map((u: any) => (
-                      <option key={u.id} value={u.id}>{u.name} ({u.role.name})</option>
+                      <option key={u.id} value={u.id}>{u.name} ({u.roles.map((r: any) => r.name).join(', ')})</option>
                     ))}
                   </Select>
                 </div>
@@ -108,16 +108,16 @@ export default function RequestForm({ users, warehouses, products }: any) {
               </div>
 
               {items.length === 0 && (
-                <div className="text-center py-8 text-gray-500 border rounded-md border-dashed">
+                <div className="text-center py-8 text-muted-foreground border rounded-md border-dashed">
                   Nenhum item adicionado. Clique no botão acima para adicionar.
                 </div>
               )}
 
               <div className="space-y-3">
                 {items.map((item) => (
-                  <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-gray-50">
+                  <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-muted">
                     <div className="col-span-12 md:col-span-6 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Produto *</label>
+                      <label className="text-xs font-medium text-muted-foreground">Produto *</label>
                       <Select 
                         name={`item_productId_${item.id}`}
                         required 
@@ -132,7 +132,7 @@ export default function RequestForm({ users, warehouses, products }: any) {
                     </div>
                     
                     <div className="col-span-8 md:col-span-4 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">Quantidade Solicitada *</label>
+                      <label className="text-xs font-medium text-muted-foreground">Quantidade Solicitada *</label>
                       <div className="flex gap-2">
                         <Input 
                           name={`item_quantity_${item.id}`}

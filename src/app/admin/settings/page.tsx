@@ -18,11 +18,11 @@ export default async function SettingsPage() {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Settings2 className="h-6 w-6 text-indigo-600" />
             Configurações do Sistema
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Gerencie os parâmetros globais de funcionamento do Estoka.</p>
+          <p className="text-muted-foreground text-sm mt-1">Gerencie os parâmetros globais de funcionamento do Estok.</p>
         </div>
         <Button className="flex items-center gap-2">
           <Save className="h-4 w-4" />
@@ -39,7 +39,7 @@ export default async function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Nome do Sistema</Label>
-              <Input defaultValue={getVal("SYSTEM_NAME") || "Estoka"} />
+              <Input defaultValue={getVal("SYSTEM_NAME") || "Estok"} />
             </div>
             <div className="space-y-2">
               <Label>Nome da Empresa</Label>
@@ -57,14 +57,14 @@ export default async function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Permitir Estoque Negativo</Label>
-                <p className="text-xs text-gray-500">Aceitar saídas sem saldo suficiente</p>
+                <p className="text-xs text-muted-foreground">Aceitar saídas sem saldo suficiente</p>
               </div>
               <Switch defaultChecked={getBool("ALLOW_NEGATIVE_STOCK")} />
             </div>
             <div className="flex items-center justify-between pt-2">
               <div className="space-y-0.5">
                 <Label>Exigir Localização</Label>
-                <p className="text-xs text-gray-500">Tornar o campo de local obrigatório</p>
+                <p className="text-xs text-muted-foreground">Tornar o campo de local obrigatório</p>
               </div>
               <Switch defaultChecked={getBool("REQUIRE_LOCATION_ON_ENTRY")} />
             </div>
@@ -80,14 +80,14 @@ export default async function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Exigir Aprovação de Requisições</Label>
-                <p className="text-xs text-gray-500">Requisições nascem pendentes</p>
+                <p className="text-xs text-muted-foreground">Requisições nascem pendentes</p>
               </div>
               <Switch defaultChecked={getBool("REQUIRE_REQUEST_APPROVAL")} />
             </div>
             <div className="flex items-center justify-between pt-2">
               <div className="space-y-0.5">
                 <Label>Atendimento Parcial</Label>
-                <p className="text-xs text-gray-500">Permitir entregar menos que o pedido</p>
+                <p className="text-xs text-muted-foreground">Permitir entregar menos que o pedido</p>
               </div>
               <Switch defaultChecked={getBool("ALLOW_PARTIAL_FULFILLMENT")} />
             </div>
@@ -103,7 +103,7 @@ export default async function SettingsPage() {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label>Exigir Conferência Cega</Label>
-                <p className="text-xs text-gray-500">Ocultar sistema da tela do coletor</p>
+                <p className="text-xs text-muted-foreground">Ocultar sistema da tela do coletor</p>
               </div>
               <Switch defaultChecked={getBool("INVENTORY_BLIND_COUNT")} />
             </div>

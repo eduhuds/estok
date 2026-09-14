@@ -75,58 +75,66 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="rounded-2xl border-border/50 bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Divergências (Para Revisão)</CardTitle>
-            <FileText className="h-4 w-4 text-amber-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Divergências</CardTitle>
+            <div className="bg-amber-100 p-2 rounded-lg">
+              <FileText className="h-4 w-4 text-amber-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{pendingDivergencesCount}</div>
-            <p className="text-xs text-gray-500">Pendentes de análise</p>
+            <div className="text-3xl font-black text-foreground">{pendingDivergencesCount}</div>
+            <p className="text-xs text-muted-foreground mt-1">Pendentes de análise</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl border-border/50 bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ajustes (Aguardando Aprovação)</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-blue-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Ajustes</CardTitle>
+            <div className="bg-blue-100 p-2 rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-blue-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{pendingApprovalsCount}</div>
-            <p className="text-xs text-gray-500">Revisados aguardando gestor</p>
+            <div className="text-3xl font-black text-foreground">{pendingApprovalsCount}</div>
+            <p className="text-xs text-muted-foreground mt-1">Aguardando aprovação</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl border-border/50 bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Transferências em Andamento</CardTitle>
-            <ArrowRightLeft className="h-4 w-4 text-emerald-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Transferências</CardTitle>
+            <div className="bg-emerald-100 p-2 rounded-lg">
+              <ArrowRightLeft className="h-4 w-4 text-emerald-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{inTransitTransfersCount}</div>
-            <p className="text-xs text-gray-500">Materiais em trânsito</p>
+            <div className="text-3xl font-black text-foreground">{inTransitTransfersCount}</div>
+            <p className="text-xs text-muted-foreground mt-1">Em andamento</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="rounded-2xl border-border/50 bg-card/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:border-primary/20">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total de Produtos</CardTitle>
-            <Package className="h-4 w-4 text-gray-500" />
+            <CardTitle className="text-sm font-semibold text-muted-foreground">Total de Produtos</CardTitle>
+            <div className="bg-slate-100 p-2 rounded-lg">
+              <Package className="h-4 w-4 text-slate-600" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalProducts}</div>
-            <p className="text-xs text-gray-500">Cadastrados na base</p>
+            <div className="text-3xl font-black text-foreground">{totalProducts}</div>
+            <p className="text-xs text-muted-foreground mt-1">Cadastrados na base</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
+        <Card className="col-span-4 rounded-2xl border-border/50 shadow-sm">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle>Entradas vs Saídas</CardTitle>
-                <CardDescription>Fluxo de movimentações nos últimos dias de operação.</CardDescription>
+                <CardTitle className="text-lg font-bold">Entradas vs Saídas</CardTitle>
+                <CardDescription className="mt-1">Fluxo de movimentações nos últimos dias de operação.</CardDescription>
               </div>
-              <Link href="/reports/movements" className="text-sm text-indigo-600 hover:underline">
-                Ver relatório
+              <Link href="/reports/movements" className="text-sm text-primary font-medium hover:underline flex items-center gap-1">
+                Ver relatório <ArrowRightLeft className="h-3 w-3" />
               </Link>
             </div>
           </CardHeader>
@@ -135,15 +143,15 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3">
+        <Card className="col-span-3 rounded-2xl border-border/50 shadow-sm">
           <CardHeader>
-            <CardTitle>Últimas Movimentações</CardTitle>
-            <CardDescription>Entradas, saídas e ajustes recentes no sistema.</CardDescription>
+            <CardTitle className="text-lg font-bold">Últimas Movimentações</CardTitle>
+            <CardDescription className="mt-1">Entradas, saídas e ajustes recentes no sistema.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {recentMovements.length === 0 ? (
-                <div className="text-center py-6 text-sm text-gray-500 border border-dashed rounded-md">
+                <div className="text-center py-6 text-sm text-muted-foreground bg-muted/30 rounded-xl">
                   Nenhuma movimentação.
                 </div>
               ) : (
@@ -161,20 +169,20 @@ export default async function DashboardPage() {
                   const Icon = mov.type === 'RETURN' ? RotateCcw : ArrowRightLeft
 
                   return (
-                    <div key={mov.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+                    <div key={mov.id} className="flex items-center justify-between border-b border-border/50 pb-4 last:border-0 last:pb-0 transition-colors hover:bg-muted/20 -mx-2 px-2 rounded-lg py-2">
                       <div className="flex items-center space-x-4">
-                        <div className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                          isPositive ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
+                        <div className={`flex h-10 w-10 items-center justify-center rounded-xl shadow-inner ${
+                          isPositive ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
                         }`}>
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium">{mov.product.name}</span>
-                          <span className="text-xs text-gray-500">{typeStr} • {new Date(mov.createdAt).toLocaleDateString('pt-BR')}</span>
+                          <span className="text-sm font-bold text-foreground">{mov.product.name}</span>
+                          <span className="text-xs font-medium text-muted-foreground mt-0.5">{typeStr} • {new Date(mov.createdAt).toLocaleDateString('pt-BR')}</span>
                         </div>
                       </div>
-                      <div className={`font-medium ${
-                        isPositive ? 'text-emerald-600' : 'text-red-600'
+                      <div className={`font-black text-lg ${
+                        isPositive ? 'text-success' : 'text-destructive'
                       }`}>
                         {isPositive ? '+' : ''}{mov.quantity}
                       </div>
@@ -188,14 +196,14 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-1">
-        <Card>
+        <Card className="rounded-2xl border-border/50 shadow-sm">
           <CardHeader>
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle>Inventários Ativos</CardTitle>
-                <CardDescription>Acompanhe o progresso das contagens via Coletor.</CardDescription>
+                <CardTitle className="text-lg font-bold">Inventários Ativos</CardTitle>
+                <CardDescription className="mt-1">Acompanhe o progresso das contagens via Coletor.</CardDescription>
               </div>
-              <Link href="/inventory" className="text-sm text-indigo-600 hover:underline">
+              <Link href="/inventory" className="text-sm text-primary font-medium hover:underline">
                 Ir para Inventários
               </Link>
             </div>
@@ -203,7 +211,7 @@ export default async function DashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {activeInventories.length === 0 ? (
-                <div className="text-center py-6 text-sm text-gray-500 border border-dashed rounded-md">
+                <div className="text-center py-6 text-sm text-muted-foreground bg-muted/30 rounded-xl">
                   Nenhum inventário em andamento no momento.
                 </div>
               ) : (
@@ -213,19 +221,19 @@ export default async function DashboardPage() {
                   const progress = total > 0 ? Math.round((completed / total) * 100) : 0
 
                   return (
-                    <div key={inv.id} className="flex items-center justify-between rounded-lg border p-4">
+                    <div key={inv.id} className="group flex items-center justify-between rounded-xl border border-border/50 bg-background/50 p-4 transition-all hover:border-primary/30 hover:shadow-sm">
                       <div className="flex flex-col space-y-1">
-                        <Link href={`/inventory/${inv.id}`} className="font-semibold hover:text-indigo-600">
+                        <Link href={`/inventory/${inv.id}`} className="font-bold text-foreground group-hover:text-primary transition-colors">
                           {inv.name}
                         </Link>
-                        <span className="text-sm text-gray-500 flex items-center gap-1">
-                          <Smartphone className="h-3 w-3" />
+                        <span className="text-sm font-medium text-muted-foreground flex items-center gap-1.5 mt-1">
+                          <Smartphone className="h-3.5 w-3.5 text-primary/70" />
                           Locais: {completed}/{total}
                         </span>
                       </div>
                       <div className="flex flex-col items-end space-y-2">
-                        <Badge variant="default">Em Andamento</Badge>
-                        <span className="text-sm font-medium text-indigo-600">{progress}% concluído</span>
+                        <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">Em Andamento</Badge>
+                        <span className="text-sm font-bold text-primary">{progress}% concluído</span>
                       </div>
                     </div>
                   )

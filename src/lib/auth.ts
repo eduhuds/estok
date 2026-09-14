@@ -8,7 +8,7 @@ export type SessionPayload = {
   userId: string
   name: string
   email: string
-  role: string
+  roles: string[]
   expiresAt: Date
 }
 
@@ -25,20 +25,24 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ["HS256"],
     })
+    // Backwards compatibility for old sessions that had { role: string }
+    if (payload.role && !payload.roles) {
+      payload.roles = [payload.role]
+    }
     return payload as SessionPayload
   } catch {
     return null
   }
 }
 
-export async function createSession(userId: string, name: string, email: string, role: string) {
+export async function createSession(userId: string, name: string, email: string, roles: string[]) {
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000)
   
   const payload: SessionPayload = {
     userId,
     name,
     email,
-    role,
+    roles,
     expiresAt,
   }
 

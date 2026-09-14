@@ -11,7 +11,7 @@ type ChartData = {
 export function DashboardCharts({ data }: { data: ChartData[] }) {
   if (data.length === 0) {
     return (
-      <div className="h-full w-full flex items-center justify-center text-sm text-gray-500 border border-dashed rounded-md">
+      <div className="h-full w-full flex items-center justify-center text-sm text-muted-foreground border border-dashed rounded-md">
         Dados insuficientes para gerar o gráfico.
       </div>
     )

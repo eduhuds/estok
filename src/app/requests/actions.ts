@@ -4,6 +4,8 @@ import { db } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { deliverMaterialRequest } from "@/lib/stock"
+import { logAudit } from "@/lib/audit"
+import { getSession } from "@/lib/auth"
 
 export async function createRequestAction(formData: FormData) {
   const requesterId = formData.get("requesterId") as string
@@ -40,6 +42,11 @@ export async function createRequestAction(formData: FormData) {
     }
   })
 
+  await logAudit("REQUEST_CREATED", "MaterialRequest", request.id, { 
+    status: actionType === 'DRAFT' ? 'DRAFT' : 'PENDING_APPROVAL',
+    requestNumber: request.requestNumber 
+  })
+
   revalidatePath("/requests")
   redirect(`/requests/${request.id}`)
 }
@@ -64,6 +71,8 @@ export async function approveRequestAction(requestId: string, userId: string) {
     }
   }
 
+  await logAudit("REQUEST_APPROVED", "MaterialRequest", requestId)
+
   revalidatePath(`/requests/${requestId}`)
   revalidatePath("/requests")
 }
@@ -76,6 +85,47 @@ export async function rejectRequestAction(requestId: string, userId: string, rea
       notes: reason,
     }
   })
+
+  await logAudit("REQUEST_REJECTED", "MaterialRequest", requestId, { reason })
+
+  revalidatePath(`/requests/${requestId}`)
+  revalidatePath("/requests")
+}
+
+export async function cancelRequestAction(requestId: string, userId: string) {
+  const req = await db.materialRequest.findUnique({ where: { id: requestId } })
+  if (!req) throw new Error("Requisição não encontrada")
+
+  if (['PARTIALLY_FULFILLED', 'FULFILLED'].includes(req.status)) {
+    throw new Error("Não é possível cancelar uma requisição que já teve itens separados/entregues. Faça um estorno das movimentações de saída no módulo de devoluções.")
+  }
+
+  await db.materialRequest.update({
+    where: { id: requestId },
+    data: { status: 'CANCELLED' }
+  })
+
+  await logAudit("REQUEST_CANCELLED", "MaterialRequest", requestId)
+
+  revalidatePath(`/requests/${requestId}`)
+  revalidatePath("/requests")
+}
+
+export async function startSeparationAction(requestId: string, userId: string) {
+  const req = await db.materialRequest.findUnique({ where: { id: requestId } })
+  if (!req) throw new Error("Requisição não encontrada")
+
+  if (req.status !== 'APPROVED') {
+    throw new Error("A requisição precisa estar aprovada para iniciar a separação.")
+  }
+
+  await db.materialRequest.update({
+    where: { id: requestId },
+    data: { status: 'IN_SEPARATION' }
+  })
+
+  await logAudit("REQUEST_SEPARATION_STARTED", "MaterialRequest", requestId)
+
   revalidatePath(`/requests/${requestId}`)
   revalidatePath("/requests")
 }
@@ -100,6 +150,7 @@ export async function fulfillRequestAction(formData: FormData) {
   }
 
   await deliverMaterialRequest(requestId, userId, deliveredItems)
+  // Audit is logged inside deliverMaterialRequest transactional flow to ensure consistency.
 
   revalidatePath(`/requests/${requestId}`)
   revalidatePath("/requests")

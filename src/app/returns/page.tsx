@@ -28,7 +28,7 @@ export default async function ReturnsPage() {
           </Link>
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Devoluções</h2>
-            <p className="text-gray-500">Controle de materiais devolvidos ao estoque.</p>
+            <p className="text-muted-foreground">Controle de materiais devolvidos ao estoque.</p>
           </div>
         </div>
         <Link href="/returns/new">
@@ -39,8 +39,68 @@ export default async function ReturnsPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <Table>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        {/* Mobile View: Cards */}
+        <div className="md:hidden divide-y divide-border">
+          {returns.length === 0 ? (
+            <div className="p-6 text-center text-muted-foreground flex flex-col items-center">
+              <RotateCcw className="h-10 w-10 text-muted-foreground/30 mb-3" />
+              Nenhuma devolução registrada.
+            </div>
+          ) : (
+            returns.map(ret => (
+              <div key={ret.id} className="p-4 space-y-3 bg-card hover:bg-muted/30 transition-colors">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase">
+                      Num: {ret.returnNumber}
+                    </span>
+                    <span className="font-bold text-base text-foreground leading-tight">
+                      {ret.returnedBy.name}
+                    </span>
+                  </div>
+                  <div>
+                    {ret.status === 'DRAFT' && <Badge variant="outline" className="text-[10px] text-amber-600 border-amber-200 bg-amber-50">Rascunho</Badge>}
+                    {ret.status === 'RECEIVED' && <Badge variant="success" className="text-[10px]">Recebido</Badge>}
+                    {ret.status === 'CANCELLED' && <Badge variant="destructive" className="text-[10px]">Cancelado</Badge>}
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-xs text-muted-foreground block">Data</span>
+                    <span className="font-medium text-foreground">
+                      {new Date(ret.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground block">Req. Original</span>
+                    {ret.request ? (
+                      <Link href={`/requests/${ret.requestId}`} className="text-indigo-600 font-medium hover:underline">
+                        {ret.request.requestNumber}
+                      </Link>
+                    ) : (
+                      <span className="text-muted-foreground">-</span>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                  <div className="flex flex-col text-xs text-muted-foreground">
+                    <span>Local: <span className="font-medium text-foreground">{ret.warehouse.name}</span></span>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm font-medium">
+                    {ret._count.items} <span className="text-xs text-muted-foreground font-normal">itens</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop View: Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Número</TableHead>
@@ -55,7 +115,7 @@ export default async function ReturnsPage() {
           <TableBody>
             {returns.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                   <RotateCcw className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   Nenhuma devolução registrada.
                 </TableCell>
@@ -72,7 +132,7 @@ export default async function ReturnsPage() {
                         {ret.request.requestNumber}
                       </Link>
                     ) : (
-                      <span className="text-gray-400">-</span>
+                      <span className="text-muted-foreground">-</span>
                     )}
                   </TableCell>
                   <TableCell className="text-center">{ret._count.items}</TableCell>
@@ -87,6 +147,7 @@ export default async function ReturnsPage() {
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )

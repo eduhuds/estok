@@ -14,7 +14,7 @@ export async function loginAction(prevState: unknown, formData: FormData) {
 
   const user = await db.user.findUnique({
     where: { email },
-    include: { role: true }
+    include: { roles: true }
   })
 
   if (!user) {
@@ -31,7 +31,7 @@ export async function loginAction(prevState: unknown, formData: FormData) {
     return { error: "Credenciais inválidas." }
   }
 
-  await createSession(user.id, user.name, user.email, user.role.name)
+  await createSession(user.id, user.name, user.email, user.roles.map((r: any) => r.name))
 
   return { success: true }
 }

@@ -21,7 +21,7 @@ export default async function ReceiptsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Entradas de Materiais</h2>
-          <p className="text-gray-500">Acompanhe e registre o recebimento de mercadorias no estoque.</p>
+          <p className="text-muted-foreground">Acompanhe e registre o recebimento de mercadorias no estoque.</p>
         </div>
         <Link href="/receipts/new">
           <Button className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700">
@@ -31,9 +31,9 @@ export default async function ReceiptsPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por número do documento ou fornecedor..." className="pl-9" />
         </div>
         <div className="flex gap-2">
@@ -44,8 +44,63 @@ export default async function ReceiptsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200">
-        <Table>
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
+        {/* Mobile View: Cards */}
+        <div className="md:hidden divide-y divide-border">
+          {receipts.length === 0 ? (
+            <div className="p-6 text-center text-muted-foreground">
+              Nenhuma entrada registrada ainda.
+            </div>
+          ) : (
+            receipts.map((receipt) => (
+              <div key={receipt.id} className="p-4 space-y-3 bg-card hover:bg-muted/30 transition-colors">
+                <div className="flex justify-between items-start gap-2">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold text-muted-foreground uppercase">
+                      Num: {receipt.documentNumber || 'S/N'}
+                    </span>
+                    <span className="font-bold text-base text-foreground leading-tight">
+                      {receipt.supplier.name}
+                    </span>
+                  </div>
+                  <Badge variant={receipt.status === 'COMPLETED' ? 'success' : receipt.status === 'DRAFT' ? 'outline' : 'secondary'} className="text-[10px]">
+                    {receipt.status === 'COMPLETED' ? 'Concluída' : receipt.status === 'DRAFT' ? 'Rascunho' : 'Cancelada'}
+                  </Badge>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div>
+                    <span className="text-xs text-muted-foreground block">Data</span>
+                    <span className="font-medium text-foreground">
+                      {receipt.documentDate ? new Date(receipt.documentDate).toLocaleDateString('pt-BR') : '-'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-xs text-muted-foreground block">Valor</span>
+                    <span className="font-medium text-emerald-600">
+                      {receipt.total ? `R$ ${Number(receipt.total).toFixed(2)}` : '-'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="font-medium text-foreground">{receipt._count.items}</span> itens
+                  </div>
+                  <Link href={`/receipts/${receipt.id}`}>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <MoreHorizontal className="h-4 w-4 text-primary" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Desktop View: Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Número</TableHead>
@@ -61,16 +116,16 @@ export default async function ReceiptsPage() {
           <TableBody>
             {receipts.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   Nenhuma entrada registrada ainda.
                 </TableCell>
               </TableRow>
             ) : (
               receipts.map((receipt) => (
                 <TableRow key={receipt.id}>
-                  <TableCell className="font-medium text-gray-900">{receipt.documentNumber || 'Sem Num.'}</TableCell>
+                  <TableCell className="font-medium text-foreground">{receipt.documentNumber || 'Sem Num.'}</TableCell>
                   <TableCell>{receipt.supplier.name}</TableCell>
-                  <TableCell className="text-gray-500">{receipt.warehouse.name}</TableCell>
+                  <TableCell className="text-muted-foreground">{receipt.warehouse.name}</TableCell>
                   <TableCell>
                     {receipt.documentDate ? new Date(receipt.documentDate).toLocaleDateString('pt-BR') : '-'}
                   </TableCell>
@@ -84,15 +139,18 @@ export default async function ReceiptsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
+                    <Link href={`/receipts/${receipt.id}`}>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
     </div>
   )

@@ -19,7 +19,7 @@ export default async function SuppliersPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Fornecedores</h2>
-          <p className="text-gray-500">Gerencie os fornecedores de materiais do almoxarifado.</p>
+          <p className="text-muted-foreground">Gerencie os fornecedores de materiais do almoxarifado.</p>
         </div>
         <Link href="/suppliers/new">
           <Button className="flex items-center gap-2">
@@ -29,9 +29,9 @@ export default async function SuppliersPage() {
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por nome ou documento..." className="pl-9" />
         </div>
         <div className="flex gap-2">
@@ -42,7 +42,7 @@ export default async function SuppliersPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -58,18 +58,18 @@ export default async function SuppliersPage() {
           <TableBody>
             {suppliers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
                   Você ainda não possui fornecedores cadastrados.
                 </TableCell>
               </TableRow>
             ) : (
               suppliers.map((supplier) => (
                 <TableRow key={supplier.id}>
-                  <TableCell className="font-medium text-gray-900">
+                  <TableCell className="font-medium text-foreground">
                     <Link href={`/suppliers/${supplier.id}`} className="hover:underline text-blue-600">
                       {supplier.name}
                     </Link>
-                    {supplier.tradeName && <div className="text-xs text-gray-500 font-normal">{supplier.tradeName}</div>}
+                    {supplier.tradeName && <div className="text-xs text-muted-foreground font-normal">{supplier.tradeName}</div>}
                   </TableCell>
                   <TableCell>{supplier.document || '-'}</TableCell>
                   <TableCell>{supplier.email || '-'}</TableCell>

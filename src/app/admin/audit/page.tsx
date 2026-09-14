@@ -27,23 +27,23 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Shield className="h-6 w-6 text-indigo-600" />
             Trilha de Auditoria
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Registro imutável de operações e eventos do sistema.</p>
+          <p className="text-muted-foreground text-sm mt-1">Registro imutável de operações e eventos do sistema.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {logs.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhum log de auditoria encontrado.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Data/Hora</TableHead>
                   <TableHead>Usuário</TableHead>
@@ -56,22 +56,22 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
               <TableBody>
                 {logs.map((log) => (
                   <TableRow key={log.id}>
-                    <TableCell className="whitespace-nowrap text-sm text-gray-500">
+                    <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                       {log.timestamp.toLocaleString()}
                     </TableCell>
                     <TableCell className="font-medium text-sm">
                       {log.user?.name || 'Sistema'}
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="font-mono text-xs font-bold text-gray-700 bg-gray-100">
+                      <Badge variant="outline" className="font-mono text-xs font-bold text-gray-700 bg-accent">
                         {log.action}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">{log.entityType}</TableCell>
-                    <TableCell className="font-mono text-xs text-gray-500 truncate max-w-[120px]" title={log.entityId}>
+                    <TableCell className="text-sm text-muted-foreground">{log.entityType}</TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground truncate max-w-[120px]" title={log.entityId}>
                       {log.entityId}
                     </TableCell>
-                    <TableCell className="text-xs text-gray-400">{log.ip || '-'}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground">{log.ip || '-'}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -82,11 +82,11 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
 
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-4">
-          <a href={`/admin/audit?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <a href={`/admin/audit?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Anterior
           </a>
-          <span className="px-4 py-2 text-gray-500">Página {page} de {totalPages}</span>
-          <a href={`/admin/audit?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <span className="px-4 py-2 text-muted-foreground">Página {page} de {totalPages}</span>
+          <a href={`/admin/audit?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Próxima
           </a>
         </div>

@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, CheckCircle, XCircle, Package } from "lucide-react"
+import { ArrowLeft, CheckCircle, XCircle, Package, Play } from "lucide-react"
 import Link from "next/link"
-import { approveRequestAction, rejectRequestAction } from "../actions"
+import { approveRequestAction, rejectRequestAction, startSeparationAction, cancelRequestAction } from "../actions"
+import { CancelRequestButton } from "./cancel-button"
 
 export default async function RequestDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params
@@ -28,7 +29,7 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
   if (!req) notFound()
 
   // Mocks user para ações (Em produção viria da sessão real)
-  const userGestor = await db.user.findFirst({ where: { role: { name: 'GESTOR' } } })
+  const userGestor = await db.user.findFirst({ where: { roles: { some: { name: 'GESTOR' } } } })
   const mockUserId = userGestor?.id || ""
 
   let statusColor = "default"
@@ -43,6 +44,8 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
 
   const approveAction = approveRequestAction.bind(null, req.id, mockUserId)
   const rejectAction = rejectRequestAction.bind(null, req.id, mockUserId, "Rejeitado pelo gestor (mock)")
+  const separationAction = startSeparationAction.bind(null, req.id, mockUserId)
+  const cancelAction = cancelRequestAction.bind(null, req.id, mockUserId)
 
   return (
     <div className="space-y-6">
@@ -59,7 +62,7 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
               {/* @ts-expect-error: variant typing string mismatch */}
               <Badge variant={statusColor}>{statusLabel}</Badge>
             </div>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Solicitado por {req.requester.name} em {req.requestedAt ? new Date(req.requestedAt).toLocaleDateString('pt-BR') : '-'}
             </p>
           </div>
@@ -81,13 +84,24 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
               </form>
             </>
           )}
-          {['APPROVED', 'PARTIALLY_FULFILLED', 'IN_SEPARATION'].includes(req.status) && (
+          {req.status === 'APPROVED' && (
+            <form action={separationAction}>
+              <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
+                <Play className="h-4 w-4" />
+                Iniciar Separação
+              </Button>
+            </form>
+          )}
+          {['IN_SEPARATION', 'PARTIALLY_FULFILLED'].includes(req.status) && (
             <Link href={`/requests/${req.id}/fulfillment`}>
               <Button className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white">
                 <Package className="h-4 w-4" />
-                Iniciar Separação / Entrega
+                Continuar Separação / Entrega
               </Button>
             </Link>
+          )}
+          {['DRAFT', 'PENDING_APPROVAL', 'APPROVED', 'IN_SEPARATION'].includes(req.status) && (
+            <CancelRequestButton cancelAction={cancelAction} />
           )}
         </div>
       </div>
@@ -102,12 +116,12 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
               {req.items.map(item => (
                 <div key={item.id} className="flex justify-between items-center border p-4 rounded-md">
                   <div>
-                    <h4 className="font-medium text-gray-900">{item.product.code} - {item.product.name}</h4>
-                    <p className="text-sm text-gray-500">Unidade: {item.unit.code}</p>
+                    <h4 className="font-medium text-foreground">{item.product.code} - {item.product.name}</h4>
+                    <p className="text-sm text-muted-foreground">Unidade: {item.unit.code}</p>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold">{item.requestedQuantity}</div>
-                    <p className="text-xs text-gray-500">Qtd Solicitada</p>
+                    <p className="text-xs text-muted-foreground">Qtd Solicitada</p>
                   </div>
                 </div>
               ))}
@@ -122,24 +136,24 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-gray-500">Almoxarifado Destino</p>
+                <p className="text-sm text-muted-foreground">Almoxarifado Destino</p>
                 <p className="font-medium">{req.warehouse.name}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Prioridade</p>
+                <p className="text-sm text-muted-foreground">Prioridade</p>
                 <p className="font-medium">
                   {req.priority === 'LOW' ? 'Baixa' : req.priority === 'NORMAL' ? 'Normal' : req.priority === 'HIGH' ? 'Alta' : 'Urgente'}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">Observações</p>
+                <p className="text-sm text-muted-foreground">Observações</p>
                 <p className="font-medium">{req.notes || '-'}</p>
               </div>
               {req.approvedBy && (
                 <div className="pt-4 border-t">
-                  <p className="text-sm text-gray-500">Aprovado por</p>
+                  <p className="text-sm text-muted-foreground">Aprovado por</p>
                   <p className="font-medium">{req.approvedBy.name}</p>
-                  <p className="text-xs text-gray-500">{req.approvedAt ? new Date(req.approvedAt).toLocaleString('pt-BR') : ''}</p>
+                  <p className="text-xs text-muted-foreground">{req.approvedAt ? new Date(req.approvedAt).toLocaleString('pt-BR') : ''}</p>
                 </div>
               )}
             </CardContent>
@@ -157,7 +171,7 @@ export default async function RequestDetailPage({ params }: { params: { id: stri
                       <span className="truncate max-w-[150px]">{item.product.code}</span>
                       <span className="font-medium text-emerald-600">{item.deliveredQuantity} / {item.approvedQuantity}</span>
                     </div>
-                    <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div className="w-full bg-accent rounded-full h-2">
                       <div 
                         className="bg-emerald-500 h-2 rounded-full" 
                         style={{ width: `${item.approvedQuantity > 0 ? (item.deliveredQuantity / item.approvedQuantity) * 100 : 0}%` }}

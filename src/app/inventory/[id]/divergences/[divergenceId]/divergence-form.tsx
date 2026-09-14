@@ -17,7 +17,7 @@ export default function DivergenceForm({ divergenceId, inventoryId, userId, stat
           <CardTitle>Ações Bloqueadas</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             Esta divergência já foi processada e não pode receber novas ações.
           </p>
         </CardContent>

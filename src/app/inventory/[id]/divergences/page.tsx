@@ -38,32 +38,32 @@ export default async function DivergencesPage({ params }: { params: { id: string
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Divergências Encontradas</h2>
-          <p className="text-gray-500">Resultado da conferência entre sistema e contagem física.</p>
+          <p className="text-muted-foreground">Resultado da conferência entre sistema e contagem física.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Total de Divergências</div>
-            <div className="text-3xl font-bold text-gray-900">{totalDivergences}</div>
+            <div className="text-sm font-medium text-muted-foreground mb-1">Total de Divergências</div>
+            <div className="text-3xl font-bold text-foreground">{totalDivergences}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Sobra Física (+)</div>
+            <div className="text-sm font-medium text-muted-foreground mb-1">Sobra Física (+)</div>
             <div className="text-3xl font-bold text-emerald-600">{withSurplus}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Falta Física (-)</div>
+            <div className="text-sm font-medium text-muted-foreground mb-1">Falta Física (-)</div>
             <div className="text-3xl font-bold text-red-600">{withShortage}</div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -78,7 +78,7 @@ export default async function DivergencesPage({ params }: { params: { id: string
           <TableBody>
             {inv.divergences.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                   <CheckCircle2 className="h-12 w-12 text-emerald-400 mx-auto mb-4" />
                   Nenhuma divergência! O estoque físico bate perfeitamente com o sistema.
                 </TableCell>
@@ -93,10 +93,10 @@ export default async function DivergencesPage({ params }: { params: { id: string
                     <TableCell className="font-medium">{div.location.code}</TableCell>
                     <TableCell>
                       <div className="font-medium">{div.product.code}</div>
-                      <div className="text-xs text-gray-500">{div.product.name}</div>
+                      <div className="text-xs text-muted-foreground">{div.product.name}</div>
                     </TableCell>
-                    <TableCell className="text-center text-gray-500">{div.systemQuantity}</TableCell>
-                    <TableCell className="text-center font-bold text-gray-900">{div.countedQuantity}</TableCell>
+                    <TableCell className="text-center text-muted-foreground">{div.systemQuantity}</TableCell>
+                    <TableCell className="text-center font-bold text-foreground">{div.countedQuantity}</TableCell>
                     <TableCell className={`text-center font-bold ${diffColor}`}>
                       {diffSignal}{div.difference}
                     </TableCell>

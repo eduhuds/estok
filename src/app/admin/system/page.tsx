@@ -30,11 +30,11 @@ export default async function SystemHealthPage() {
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Activity className="h-6 w-6 text-emerald-600" />
             Saúde do Sistema
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Status da infraestrutura e volume de dados da plataforma.</p>
+          <p className="text-muted-foreground text-sm mt-1">Status da infraestrutura e volume de dados da plataforma.</p>
         </div>
       </div>
 
@@ -42,8 +42,8 @@ export default async function SystemHealthPage() {
         <Card>
           <CardContent className="p-6 flex flex-col items-center justify-center text-center">
             <Server className="h-8 w-8 text-blue-500 mb-2" />
-            <p className="text-sm text-gray-500 font-medium">Versão da Aplicação</p>
-            <p className="text-xl font-bold text-gray-900">v0.1.0-beta</p>
+            <p className="text-sm text-muted-foreground font-medium">Versão da Aplicação</p>
+            <p className="text-xl font-bold text-foreground">v0.1.0-beta</p>
             <p className="text-xs text-green-500 mt-1">Online</p>
           </CardContent>
         </Card>
@@ -51,25 +51,25 @@ export default async function SystemHealthPage() {
         <Card>
           <CardContent className="p-6 flex flex-col items-center justify-center text-center">
             <Database className="h-8 w-8 text-indigo-500 mb-2" />
-            <p className="text-sm text-gray-500 font-medium">Status do Banco</p>
-            <p className="text-lg font-bold text-gray-900 truncate max-w-full" title={dbStatus}>{dbStatus}</p>
-            <p className="text-xs text-gray-400 mt-1">{dbLatency}ms latência</p>
+            <p className="text-sm text-muted-foreground font-medium">Status do Banco</p>
+            <p className="text-lg font-bold text-foreground truncate max-w-full" title={dbStatus}>{dbStatus}</p>
+            <p className="text-xs text-muted-foreground mt-1">{dbLatency}ms latência</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-6 flex flex-col items-center justify-center text-center">
             <Cloud className="h-8 w-8 text-sky-500 mb-2" />
-            <p className="text-sm text-gray-500 font-medium">Ambiente</p>
-            <p className="text-xl font-bold text-gray-900">{process.env.NODE_ENV === 'production' ? 'Produção' : 'Desenvolvimento'}</p>
+            <p className="text-sm text-muted-foreground font-medium">Ambiente</p>
+            <p className="text-xl font-bold text-foreground">{process.env.NODE_ENV === 'production' ? 'Produção' : 'Desenvolvimento'}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-6 flex flex-col items-center justify-center text-center">
             <Activity className="h-8 w-8 text-emerald-500 mb-2" />
-            <p className="text-sm text-gray-500 font-medium">Usuários Ativos</p>
-            <p className="text-xl font-bold text-gray-900">{totalUsers}</p>
+            <p className="text-sm text-muted-foreground font-medium">Usuários Ativos</p>
+            <p className="text-xl font-bold text-foreground">{totalUsers}</p>
           </CardContent>
         </Card>
       </div>

@@ -44,23 +44,23 @@ export default async function MovementsReportPage({ searchParams }: { searchPara
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <ArrowRightLeft className="h-6 w-6 text-emerald-600" />
             Extrato de Movimentações
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Histórico completo de transações em ordem cronológica.</p>
+          <p className="text-muted-foreground text-sm mt-1">Histórico completo de transações em ordem cronológica.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {movements.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhuma movimentação registrada.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Data</TableHead>
                   <TableHead>Tipo</TableHead>
@@ -79,7 +79,7 @@ export default async function MovementsReportPage({ searchParams }: { searchPara
                   
                   return (
                     <TableRow key={mov.id}>
-                      <TableCell className="whitespace-nowrap text-xs text-gray-500">
+                      <TableCell className="whitespace-nowrap text-xs text-muted-foreground">
                         {format(mov.createdAt, "dd/MM/yyyy HH:mm")}
                       </TableCell>
                       <TableCell>
@@ -93,12 +93,12 @@ export default async function MovementsReportPage({ searchParams }: { searchPara
                       <TableCell className={`text-right font-bold ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
                         {isPositive ? '+' : '-'}{mov.quantity}
                       </TableCell>
-                      <TableCell className="text-xs text-gray-500">{mov.warehouse.name}</TableCell>
-                      <TableCell className="text-xs font-mono bg-gray-50">{mov.location.code}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{mov.warehouse.name}</TableCell>
+                      <TableCell className="text-xs font-mono bg-muted">{mov.location.code}</TableCell>
                       <TableCell className="text-xs text-indigo-600 cursor-pointer hover:underline">
                         {mov.documentNumber || mov.referenceId || '-'}
                       </TableCell>
-                      <TableCell className="text-xs text-gray-500">{mov.performedBy.name.split(' ')[0]}</TableCell>
+                      <TableCell className="text-xs text-muted-foreground">{mov.performedBy.name.split(' ')[0]}</TableCell>
                     </TableRow>
                   )
                 })}
@@ -110,11 +110,11 @@ export default async function MovementsReportPage({ searchParams }: { searchPara
 
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-4">
-          <a href={`/reports/movements?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <a href={`/reports/movements?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Anterior
           </a>
-          <span className="px-4 py-2 text-gray-500">Página {page} de {totalPages}</span>
-          <a href={`/reports/movements?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <span className="px-4 py-2 text-muted-foreground">Página {page} de {totalPages}</span>
+          <a href={`/reports/movements?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Próxima
           </a>
         </div>

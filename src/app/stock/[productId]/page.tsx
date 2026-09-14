@@ -45,7 +45,7 @@ export default async function ProductStockPage({ params }: { params: { productId
             <h2 className="text-2xl font-bold tracking-tight">{product.name}</h2>
             <Badge variant="outline">{product.code}</Badge>
           </div>
-          <p className="text-gray-500">{product.category.name} • {product.unit.name}</p>
+          <p className="text-muted-foreground">{product.category.name} • {product.unit.name}</p>
         </div>
       </div>
 
@@ -56,8 +56,8 @@ export default async function ProductStockPage({ params }: { params: { productId
             <Package className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{totalQuantity}</div>
-            <p className="text-xs text-gray-500 mt-1">Total em todas as localizações</p>
+            <div className="text-3xl font-bold text-foreground">{totalQuantity}</div>
+            <p className="text-xs text-muted-foreground mt-1">Total em todas as localizações</p>
           </CardContent>
         </Card>
         
@@ -67,8 +67,8 @@ export default async function ProductStockPage({ params }: { params: { productId
             <Info className="h-4 w-4 text-yellow-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{totalReserved}</div>
-            <p className="text-xs text-gray-500 mt-1">Aguardando saída</p>
+            <div className="text-3xl font-bold text-foreground">{totalReserved}</div>
+            <p className="text-xs text-muted-foreground mt-1">Aguardando saída</p>
           </CardContent>
         </Card>
 
@@ -86,16 +86,16 @@ export default async function ProductStockPage({ params }: { params: { productId
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Parâmetros</CardTitle>
-            <MapPin className="h-4 w-4 text-gray-500" />
+            <MapPin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-1 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Mínimo:</span>
+                <span className="text-muted-foreground">Mínimo:</span>
                 <span className="font-medium">{product.minimumStock}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Máximo:</span>
+                <span className="text-muted-foreground">Máximo:</span>
                 <span className="font-medium">{product.maximumStock > 0 ? product.maximumStock : 'Não def.'}</span>
               </div>
             </div>
@@ -110,7 +110,7 @@ export default async function ProductStockPage({ params }: { params: { productId
           </CardHeader>
           <CardContent>
             {product.stocks.length === 0 ? (
-              <div className="text-center py-6 text-gray-500 text-sm border border-dashed rounded-lg">
+              <div className="text-center py-6 text-muted-foreground text-sm border border-dashed rounded-lg">
                 Produto não possui saldo em nenhuma localização.
               </div>
             ) : (
@@ -151,7 +151,7 @@ export default async function ProductStockPage({ params }: { params: { productId
           </CardHeader>
           <CardContent>
             {product.movements.length === 0 ? (
-              <div className="text-center py-6 text-gray-500 text-sm border border-dashed rounded-lg">
+              <div className="text-center py-6 text-muted-foreground text-sm border border-dashed rounded-lg">
                 Nenhuma movimentação registrada.
               </div>
             ) : (
@@ -169,14 +169,14 @@ export default async function ProductStockPage({ params }: { params: { productId
                         >
                           {mov.type}
                         </Badge>
-                        <span className="text-xs font-medium text-gray-500">
+                        <span className="text-xs font-medium text-muted-foreground">
                           {new Date(mov.createdAt).toLocaleDateString('pt-BR')}
                         </span>
                       </div>
                       <p className="text-sm font-medium">
                         {mov.documentNumber ? `Doc: ${mov.documentNumber}` : 'Sem documento'}
                       </p>
-                      <p className="text-xs text-gray-500">Local: {mov.location.code} • Por: {mov.performedBy.name.split(' ')[0]}</p>
+                      <p className="text-xs text-muted-foreground">Local: {mov.location.code} • Por: {mov.performedBy.name.split(' ')[0]}</p>
                     </div>
                     <div className={`font-bold text-lg ${['ENTRY', 'ADJUSTMENT_IN', 'TRANSFER_IN'].includes(mov.type) ? 'text-emerald-600' : 'text-red-600'}`}>
                       {['ENTRY', 'ADJUSTMENT_IN', 'TRANSFER_IN'].includes(mov.type) ? '+' : ''}{mov.quantity}

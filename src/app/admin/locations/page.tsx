@@ -16,7 +16,7 @@ export default async function LocationsPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Localizações</h2>
-          <p className="text-gray-500">Estruture fisicamente o almoxarifado em setores, corredores e prateleiras.</p>
+          <p className="text-muted-foreground">Estruture fisicamente o almoxarifado em setores, corredores e prateleiras.</p>
         </div>
         <Button className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
@@ -24,9 +24,9 @@ export default async function LocationsPage() {
         </Button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar localização por código ou nome..." className="pl-9" />
         </div>
       </div>
@@ -39,11 +39,11 @@ export default async function LocationsPage() {
                 <MapPin className="h-6 w-6" />
               </div>
               <h3 className="font-bold text-lg mb-1">{location.code}</h3>
-              <p className="text-sm font-medium text-gray-900 mb-1">{location.name}</p>
-              <p className="text-xs text-gray-500 mb-4">{location.warehouse.name}</p>
+              <p className="text-sm font-medium text-foreground mb-1">{location.name}</p>
+              <p className="text-xs text-muted-foreground mb-4">{location.warehouse.name}</p>
               
               <div className="w-full flex items-center justify-between border-t pt-4 mt-auto">
-                <div className="flex items-center text-gray-500 text-sm">
+                <div className="flex items-center text-muted-foreground text-sm">
                   <Box className="h-4 w-4 mr-1.5" />
                   {location._count.products} produtos
                 </div>

@@ -30,7 +30,7 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
 
   if (!inv) notFound()
 
-  const userGestor = await db.user.findFirst({ where: { role: { name: 'GESTOR' } } })
+  const userGestor = await db.user.findFirst({ where: { roles: { some: { name: 'GESTOR' } } } })
   const mockUserId = userGestor?.id || ""
 
   let statusVariant = "default"
@@ -60,7 +60,7 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
               {/* @ts-expect-error: Badge dynamic variant */}
               <Badge variant={statusVariant}>{statusLabel}</Badge>
             </div>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               {inv.warehouse.name} • Criado por {inv.createdBy.name}
             </p>
           </div>
@@ -88,9 +88,9 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Progresso</div>
-            <div className="text-3xl font-bold text-gray-900 mb-2">{progress}%</div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
+            <div className="text-sm font-medium text-muted-foreground mb-1">Progresso</div>
+            <div className="text-3xl font-bold text-foreground mb-2">{progress}%</div>
+            <div className="w-full bg-accent rounded-full h-2">
               <div 
                 className={`h-2 rounded-full ${progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'}`} 
                 style={{ width: `${progress}%` }}
@@ -100,20 +100,20 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Locais Concluídos</div>
-            <div className="text-3xl font-bold text-gray-900">{completedLocs} <span className="text-lg text-gray-400">/ {totalLocs}</span></div>
+            <div className="text-sm font-medium text-muted-foreground mb-1">Locais Concluídos</div>
+            <div className="text-3xl font-bold text-foreground">{completedLocs} <span className="text-lg text-muted-foreground">/ {totalLocs}</span></div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Coletas Enviadas</div>
-            <div className="text-3xl font-bold text-gray-900">{inv.collections.length}</div>
+            <div className="text-sm font-medium text-muted-foreground mb-1">Coletas Enviadas</div>
+            <div className="text-3xl font-bold text-foreground">{inv.collections.length}</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-6">
-            <div className="text-sm font-medium text-gray-500 mb-1">Duração</div>
-            <div className="text-3xl font-bold text-gray-900">
+            <div className="text-sm font-medium text-muted-foreground mb-1">Duração</div>
+            <div className="text-3xl font-bold text-foreground">
               {inv.startedAt ? (
                 inv.finishedAt 
                   ? `${Math.max(1, Math.round((new Date(inv.finishedAt).getTime() - new Date(inv.startedAt).getTime()) / 60000))} min`
@@ -131,25 +131,25 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
           </CardHeader>
           <CardContent>
             {inv.collections.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 border rounded-md border-dashed">
+              <div className="text-center py-8 text-muted-foreground border rounded-md border-dashed">
                 Nenhuma coleta enviada pelos operadores ainda.
               </div>
             ) : (
               <div className="space-y-4">
                 {inv.collections.map(col => (
-                  <div key={col.id} className="flex justify-between items-center border p-4 rounded-md hover:bg-gray-50">
+                  <div key={col.id} className="flex justify-between items-center border p-4 rounded-md hover:bg-muted">
                     <div className="flex items-center gap-4">
                       <div className="p-2 bg-indigo-50 rounded-full text-indigo-600">
                         <Smartphone className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-medium text-gray-900">{col.location.code}</h4>
-                        <p className="text-sm text-gray-500">Operador: {col.operator.name}</p>
+                        <h4 className="font-medium text-foreground">{col.location.code}</h4>
+                        <p className="text-sm text-muted-foreground">Operador: {col.operator.name}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-medium text-gray-900">{col._count.items} itens</div>
-                      <p className="text-xs text-gray-500">{col.startedAt ? new Date(col.startedAt).toLocaleTimeString('pt-BR') : '-'}</p>
+                      <div className="font-medium text-foreground">{col._count.items} itens</div>
+                      <p className="text-xs text-muted-foreground">{col.startedAt ? new Date(col.startedAt).toLocaleTimeString('pt-BR') : '-'}</p>
                     </div>
                   </div>
                 ))}
@@ -190,7 +190,7 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
                 {inv.operators.map(o => (
                   <div key={o.id} className="flex justify-between items-center text-sm">
                     <span className="font-medium">{o.user.name}</span>
-                    <span className="text-xs text-gray-500">{o.user.email}</span>
+                    <span className="text-xs text-muted-foreground">{o.user.email}</span>
                   </div>
                 ))}
               </div>

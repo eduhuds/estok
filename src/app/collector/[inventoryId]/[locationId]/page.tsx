@@ -20,7 +20,7 @@ export default async function CollectorLocationPage({
   if (!inv || !loc) notFound()
 
   // Em produção, buscar da sessão real
-  const userAlmox = await db.user.findFirst({ where: { role: { name: 'ALMOXARIFE' } } })
+  const userAlmox = await db.user.findFirst({ where: { roles: { some: { name: 'ALMOXARIFE' } } } })
   const mockUserId = userAlmox?.id || ""
 
   // Buscar todos os produtos ativos para permitir bipar qualquer um
@@ -30,7 +30,7 @@ export default async function CollectorLocationPage({
   })
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans max-w-lg mx-auto">
+    <div className="min-h-screen bg-accent font-sans max-w-lg mx-auto">
       <CollectorForm 
         inventoryId={inv.id} 
         locationId={loc.id} 

@@ -20,18 +20,18 @@ export default async function PermissionsPage() {
     <div className="p-6 max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <ShieldCheck className="h-6 w-6 text-indigo-600" />
             Matriz de Permissões
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Controle de acesso granular por papel (Role-Based Access Control).</p>
+          <p className="text-muted-foreground text-sm mt-1">Controle de acesso granular por papel (Role-Based Access Control).</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-gray-50">
+            <TableHeader className="bg-muted">
               <TableRow>
                 <TableHead className="w-[300px]">Permissão</TableHead>
                 {roles.map(role => (
@@ -43,8 +43,8 @@ export default async function PermissionsPage() {
               {permissions.map(permission => (
                 <TableRow key={permission.id}>
                   <TableCell>
-                    <p className="font-semibold text-gray-900">{permission.name}</p>
-                    <p className="text-xs text-gray-500 font-mono">{permission.key}</p>
+                    <p className="font-semibold text-foreground">{permission.name}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{permission.key}</p>
                   </TableCell>
                   {roles.map(role => {
                     const hasPerm = role.permissions.some(rp => rp.permissionId === permission.id)

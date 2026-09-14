@@ -20,7 +20,7 @@ export default function FulfillmentForm({ request, userId }: any) {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Atender Requisição {request.requestNumber}</h2>
-          <p className="text-gray-500">Informe a quantidade a ser entregue e o local de retirada.</p>
+          <p className="text-muted-foreground">Informe a quantidade a ser entregue e o local de retirada.</p>
         </div>
       </div>
 
@@ -40,18 +40,18 @@ export default function FulfillmentForm({ request, userId }: any) {
                 const hasStock = availableStocks.length > 0
 
                 return (
-                  <div key={item.id} className={`grid grid-cols-12 gap-3 items-end border p-4 rounded-md ${hasStock ? 'bg-white' : 'bg-red-50 border-red-200'}`}>
+                  <div key={item.id} className={`grid grid-cols-12 gap-3 items-end border p-4 rounded-md ${hasStock ? 'bg-card' : 'bg-red-50 border-red-200'}`}>
                     <div className="col-span-12 md:col-span-4 space-y-1">
-                      <label className="text-sm font-medium text-gray-900">{item.product.code} - {item.product.name}</label>
-                      <div className="text-xs text-gray-500">
-                        Aprovado: {item.approvedQuantity} | Entregue: {item.deliveredQuantity} | Pendente: <span className="font-bold text-gray-900">{pending}</span> {item.unit.code}
+                      <label className="text-sm font-medium text-foreground">{item.product.code} - {item.product.name}</label>
+                      <div className="text-xs text-muted-foreground">
+                        Aprovado: {item.approvedQuantity} | Entregue: {item.deliveredQuantity} | Pendente: <span className="font-bold text-foreground">{pending}</span> {item.unit.code}
                       </div>
                     </div>
                     
                     {hasStock ? (
                       <>
                         <div className="col-span-6 md:col-span-4 space-y-1">
-                          <label className="text-xs font-medium text-gray-500">Retirar da Localização *</label>
+                          <label className="text-xs font-medium text-muted-foreground">Retirar da Localização *</label>
                           <Select name={`delivery_location_${item.id}`}>
                             <option value="">Selecionar local com saldo...</option>
                             {availableStocks.map((s: any) => (
@@ -62,7 +62,7 @@ export default function FulfillmentForm({ request, userId }: any) {
                           </Select>
                         </div>
                         <div className="col-span-6 md:col-span-4 space-y-1">
-                          <label className="text-xs font-medium text-gray-500">Qtd para Entrega *</label>
+                          <label className="text-xs font-medium text-muted-foreground">Qtd para Entrega *</label>
                           <Input 
                             name={`delivery_quantity_${item.id}`}
                             type="number" 

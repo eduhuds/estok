@@ -14,7 +14,7 @@ export default async function NewReturnPage() {
     include: { locations: true }
   })
   
-  const users = await db.user.findMany({ where: { status: 'ACTIVE' } })
+  const users = await db.user.findMany({ where: { status: 'ACTIVE' }, include: { roles: true } })
   const products = await db.product.findMany({ 
     where: { status: 'ACTIVE' },
     include: { unit: true }
@@ -24,7 +24,7 @@ export default async function NewReturnPage() {
   })
 
   // Almoxarife simulado
-  const userAlmox = users.find(u => u.roleId)
+  const userAlmox = users.find(u => u.roles && u.roles.length > 0)
   const mockUserId = userAlmox?.id || ""
 
   return (
@@ -37,7 +37,7 @@ export default async function NewReturnPage() {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nova Devolução</h2>
-          <p className="text-gray-500">Registre o retorno de materiais ao estoque.</p>
+          <p className="text-muted-foreground">Registre o retorno de materiais ao estoque.</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default async function NewReturnPage() {
               </h3>
               
               {/* Mock de 1 item fixo para simplificar a UI sem muito JS client-side */}
-              <div className="border rounded-lg p-4 bg-gray-50 flex items-start gap-4">
+              <div className="border rounded-lg p-4 bg-muted flex items-start gap-4">
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-3">
                   <div className="col-span-2 space-y-2">
                     <label className="text-xs font-medium">Produto</label>

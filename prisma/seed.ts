@@ -67,10 +67,13 @@ async function main() {
   }
 
   // 4. Usuários
-  const passwordHash = await bcrypt.hash('estoka123', 10)
+  const adminPassword = process.env.ADMIN_PASSWORD || 'estoka123'
+  const passwordHash = await bcrypt.hash(adminPassword, 10)
+
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@estoka.com'
 
   const users = [
-    { email: 'admin@estoka.com', name: 'Administrador Sistema', roleId: roleAdmin.id },
+    { email: adminEmail, name: 'Administrador Sistema', roleId: roleAdmin.id },
     { email: 'gestor@estoka.com', name: 'Gestor Principal', roleId: roleGestor.id },
     { email: 'almoxarife@estoka.com', name: 'João Almoxarife', roleId: roleAlmox.id },
     { email: 'conferente@estoka.com', name: 'Maria Conferente', roleId: roleConf.id },
@@ -187,7 +190,7 @@ async function main() {
 
   // 10. Criar Recebimentos e Estoque
   const supplier1 = await prisma.supplier.findUnique({ where: { document: '12345678000199' } })
-  const userAdmin = await prisma.user.findUnique({ where: { email: 'admin@estoka.com' } })
+  const userAdmin = await prisma.user.findUnique({ where: { email: adminEmail } })
   const prod1 = await prisma.product.findUnique({ where: { code: 'MAT-00001' } })
   const prod2 = await prisma.product.findUnique({ where: { code: 'MAT-00002' } })
 

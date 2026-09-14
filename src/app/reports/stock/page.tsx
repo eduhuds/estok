@@ -31,23 +31,23 @@ export default async function StockReportPage({ searchParams }: { searchParams: 
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Package className="h-6 w-6 text-emerald-600" />
             Posição Atual de Estoque
           </h1>
-          <p className="text-gray-500 text-sm mt-1">Visão detalhada do saldo de produtos por localização.</p>
+          <p className="text-muted-foreground text-sm mt-1">Visão detalhada do saldo de produtos por localização.</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
         {stocks.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
+          <div className="p-8 text-center text-muted-foreground">
             Nenhum registro de estoque encontrado.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="bg-muted">
                 <TableRow>
                   <TableHead>Produto</TableHead>
                   <TableHead>Código</TableHead>
@@ -67,15 +67,15 @@ export default async function StockReportPage({ searchParams }: { searchParams: 
 
                   return (
                     <TableRow key={stock.id}>
-                      <TableCell className="font-medium text-gray-900">{stock.product.name}</TableCell>
-                      <TableCell className="text-sm text-gray-500">{stock.product.code}</TableCell>
-                      <TableCell className="text-sm text-gray-500">{stock.product.category.name}</TableCell>
+                      <TableCell className="font-medium text-foreground">{stock.product.name}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{stock.product.code}</TableCell>
+                      <TableCell className="text-sm text-muted-foreground">{stock.product.category.name}</TableCell>
                       <TableCell className="text-sm">{stock.warehouse.name}</TableCell>
-                      <TableCell className="text-sm font-mono bg-gray-50">{stock.location.code}</TableCell>
-                      <TableCell className="text-right font-bold text-gray-900">
-                        {stock.quantity} <span className="text-xs text-gray-400 font-normal">{stock.product.unit.code}</span>
+                      <TableCell className="text-sm font-mono bg-muted">{stock.location.code}</TableCell>
+                      <TableCell className="text-right font-bold text-foreground">
+                        {stock.quantity} <span className="text-xs text-muted-foreground font-normal">{stock.product.unit.code}</span>
                       </TableCell>
-                      <TableCell className="text-right text-gray-500">{stock.product.minimumStock}</TableCell>
+                      <TableCell className="text-right text-muted-foreground">{stock.product.minimumStock}</TableCell>
                       <TableCell className="text-center">
                         {status === 'NORMAL' && <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Normal</Badge>}
                         {status === 'LOW' && <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Baixo</Badge>}
@@ -92,11 +92,11 @@ export default async function StockReportPage({ searchParams }: { searchParams: 
 
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-4">
-          <a href={`/reports/stock?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <a href={`/reports/stock?page=${Math.max(1, page - 1)}`} className={`px-4 py-2 border rounded-md ${page === 1 ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Anterior
           </a>
-          <span className="px-4 py-2 text-gray-500">Página {page} de {totalPages}</span>
-          <a href={`/reports/stock?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-gray-50'}`}>
+          <span className="px-4 py-2 text-muted-foreground">Página {page} de {totalPages}</span>
+          <a href={`/reports/stock?page=${Math.min(totalPages, page + 1)}`} className={`px-4 py-2 border rounded-md ${page === totalPages ? 'pointer-events-none opacity-50' : 'hover:bg-muted'}`}>
             Próxima
           </a>
         </div>

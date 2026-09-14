@@ -6,11 +6,12 @@ import { ArrowLeft, Save } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { createProductAction } from "../actions"
+import { BarcodeInput } from "./barcode-input"
 
 export default async function NewProductPage() {
-  const categories = await db.productCategory.findMany()
-  const units = await db.productUnit.findMany()
-  const locations = await db.warehouseLocation.findMany({ include: { warehouse: true } })
+  const categories = await db.productCategory.findMany({ where: { status: 'ACTIVE' } })
+  const units = await db.productUnit.findMany({ where: { status: 'ACTIVE' } })
+  const locations = await db.warehouseLocation.findMany({ where: { status: 'ACTIVE' }, include: { warehouse: true } })
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -22,7 +23,7 @@ export default async function NewProductPage() {
         </Link>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Novo Produto</h2>
-          <p className="text-gray-500">Adicione um novo produto ao catálogo do almoxarifado.</p>
+          <p className="text-muted-foreground">Adicione um novo produto ao catálogo do almoxarifado.</p>
         </div>
       </div>
 
@@ -38,7 +39,7 @@ export default async function NewProductPage() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Código de Barras</label>
-                  <Input name="barcode" placeholder="EAN-13, EAN-8..." />
+                  <BarcodeInput />
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-medium">Descrição Completa</label>

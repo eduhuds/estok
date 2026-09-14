@@ -7,7 +7,7 @@ export default function ExportPage() {
     <div className="space-y-6 max-w-4xl">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">Exportar Dados</h2>
-        <p className="text-gray-500">Exporte relatórios e cadastros para integração com outros sistemas.</p>
+        <p className="text-muted-foreground">Exporte relatórios e cadastros para integração com outros sistemas.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -23,7 +23,7 @@ export default function ExportPage() {
                 Excel
               </Button>
               <Button variant="outline" className="flex items-center gap-2 flex-1">
-                <FileText className="h-4 w-4 text-gray-600" />
+                <FileText className="h-4 w-4 text-muted-foreground" />
                 CSV
               </Button>
             </div>
@@ -69,7 +69,7 @@ export default function ExportPage() {
                 Excel
               </Button>
               <Button variant="outline" className="flex items-center gap-2 flex-1 border-blue-200 bg-blue-50">
-                <FileText className="h-4 w-4 text-gray-600" />
+                <FileText className="h-4 w-4 text-muted-foreground" />
                 CSV
               </Button>
             </div>

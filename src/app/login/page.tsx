@@ -19,14 +19,14 @@ export default function LoginPage() {
   }, [state, router])
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-muted flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         <div className="flex flex-col items-center justify-center text-center">
           <div className="h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg mb-4">
             <Package className="h-8 w-8" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Estoka</h1>
-          <p className="text-gray-500 mt-2">Gestão de Almoxarifado Inteligente</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Estok</h1>
+          <p className="text-muted-foreground mt-2">Gestão de Almoxarifado Inteligente</p>
         </div>
 
         <Card className="shadow-lg border-0">
@@ -46,7 +46,7 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="admin@estoka.com"
+                  placeholder="admin@estok.com"
                   required
                 />
               </div>
@@ -75,8 +75,8 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-sm text-gray-500">
-          Inspirado na eficiência do KCollector
+        <p className="text-center text-sm text-muted-foreground">
+          Inspirado na eficiência do coletor
         </p>
       </div>
     </div>

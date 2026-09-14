@@ -62,13 +62,13 @@ export default async function StockPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Estoque e Saldos</h2>
-          <p className="text-gray-500">Acompanhe a disponibilidade física dos materiais no almoxarifado.</p>
+          <p className="text-muted-foreground">Acompanhe a disponibilidade física dos materiais no almoxarifado.</p>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-4 bg-card p-4 rounded-lg border border-border">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Buscar por código ou produto..." className="pl-9" />
         </div>
         <div className="flex gap-2">
@@ -79,7 +79,7 @@ export default async function StockPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200">
+      <div className="bg-card rounded-lg border border-border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -97,24 +97,24 @@ export default async function StockPage() {
           <TableBody>
             {stockData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-12 text-gray-500">
+                <TableCell colSpan={9} className="text-center py-12 text-muted-foreground">
                   Nenhum produto cadastrado.
                 </TableCell>
               </TableRow>
             ) : (
               stockData.map((data) => (
                 <TableRow key={data.product.id}>
-                  <TableCell className="font-medium text-gray-900">{data.product.code}</TableCell>
+                  <TableCell className="font-medium text-foreground">{data.product.code}</TableCell>
                   <TableCell>
                     <Link href={`/stock/${data.product.id}`} className="hover:underline text-blue-600 font-medium">
                       {data.product.name}
                     </Link>
                   </TableCell>
                   <TableCell>{data.product.category.name}</TableCell>
-                  <TableCell className="text-right font-medium">{data.totalQuantity} <span className="text-xs text-gray-500 font-normal">{data.product.unit.code}</span></TableCell>
-                  <TableCell className="text-right text-gray-500">{data.totalReserved}</TableCell>
+                  <TableCell className="text-right font-medium">{data.totalQuantity} <span className="text-xs text-muted-foreground font-normal">{data.product.unit.code}</span></TableCell>
+                  <TableCell className="text-right text-muted-foreground">{data.totalReserved}</TableCell>
                   <TableCell className="text-right font-bold text-blue-600">{data.available}</TableCell>
-                  <TableCell className="text-sm text-gray-500">
+                  <TableCell className="text-sm text-muted-foreground">
                     {data.product.minimumStock} / {data.product.maximumStock > 0 ? data.product.maximumStock : '∞'}
                   </TableCell>
                   <TableCell>

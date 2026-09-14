@@ -36,11 +36,11 @@ export default async function AdminHubPage() {
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
           <Database className="h-8 w-8 text-blue-600" />
           Administração do Sistema
         </h1>
-        <p className="text-gray-500 mt-2">Central de configurações, cadastros vitais e auditoria.</p>
+        <p className="text-muted-foreground mt-2">Central de configurações, cadastros vitais e auditoria.</p>
       </div>
 
       <div className="space-y-6">
@@ -50,7 +50,7 @@ export default async function AdminHubPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {group.items.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-gray-200 hover:border-blue-300">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full border-border hover:border-blue-300">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg flex items-center gap-2 text-gray-800">
                         <item.icon className="h-5 w-5 text-blue-600" />
@@ -58,7 +58,7 @@ export default async function AdminHubPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-500">{item.description}</p>
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
                     </CardContent>
                   </Card>
                 </Link>

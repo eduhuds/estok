@@ -45,7 +45,7 @@ export async function createReturnAction(formData: FormData) {
 
     // Receber e consolidar no estoque
     // O mockUserId deveria vir da sessão, simulando um Almoxarife recebendo
-    const userAlmox = await db.user.findFirst({ where: { role: { name: 'ALMOXARIFE' } } })
+    const userAlmox = await db.user.findFirst({ where: { roles: { some: { name: 'ALMOXARIFE' } } } })
     await receiveMaterialReturn(ret.id, userAlmox?.id || returnedById, items)
   }
 

@@ -1,44 +1,191 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Search, Filter } from "lucide-react"
+import { Filter, Eye, ArrowRight, ArrowLeft } from "lucide-react"
 import { db } from "@/lib/db"
+import Link from "next/link"
+import { Prisma } from "@prisma/client"
+import { MovementsFilterForm } from "./filter-form"
 
-export default async function MovementsPage() {
-  const movements = await db.stockMovement.findMany({
-    include: {
-      product: { include: { unit: true } },
-      location: { include: { warehouse: true } },
-      performedBy: true
-    },
-    orderBy: { createdAt: 'desc' }
-  })
+export default async function MovementsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const page = Number(searchParams.page) || 1
+  const pageSize = 20
+  const skip = (page - 1) * pageSize
+
+  // Build filter query
+  const where: Prisma.StockMovementWhereInput = {}
+  
+  const typeParam = searchParams.type as string
+  if (typeParam) where.type = typeParam
+
+  const productParam = searchParams.productId as string
+  if (productParam) where.productId = productParam
+
+  const warehouseParam = searchParams.warehouseId as string
+  if (warehouseParam) where.warehouseId = warehouseParam
+
+  const refTypeParam = searchParams.referenceType as string
+  if (refTypeParam) where.referenceType = refTypeParam
+
+  const search = searchParams.q as string
+  if (search) {
+    where.OR = [
+      { documentNumber: { contains: search, mode: 'insensitive' } },
+      { product: { name: { contains: search, mode: 'insensitive' } } },
+      { product: { code: { contains: search, mode: 'insensitive' } } }
+    ]
+  }
+
+  const [movements, totalCount, products, warehouses] = await Promise.all([
+    db.stockMovement.findMany({
+      where,
+      include: {
+        product: { include: { unit: true } },
+        location: { include: { warehouse: true } },
+        performedBy: true
+      },
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: pageSize
+    }),
+    db.stockMovement.count({ where }),
+    db.product.findMany({ select: { id: true, code: true, name: true }, orderBy: { name: 'asc' } }),
+    db.warehouse.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
+  ])
+
+  const totalPages = Math.ceil(totalCount / pageSize)
+
+  // Calculate summary if only 1 product is selected
+  let summary = null
+  if (productParam) {
+    const agg = await db.stockMovement.groupBy({
+      by: ['type'],
+      where,
+      _sum: { quantity: true }
+    })
+    
+    let totalIn = 0
+    let totalOut = 0
+    agg.forEach(a => {
+      const q = Number(a._sum.quantity || 0)
+      if (['ENTRY', 'ADJUSTMENT_IN', 'TRANSFER_IN', 'RETURN'].includes(a.type)) totalIn += q
+      if (['EXIT', 'ADJUSTMENT_OUT', 'TRANSFER_OUT'].includes(a.type)) totalOut += q
+    })
+    summary = { totalIn, totalOut }
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Histórico de Movimentações</h2>
-          <p className="text-gray-500">Registro global e imutável de todas as alterações de estoque.</p>
+          <h2 className="text-2xl font-bold tracking-tight">Extrato de Estoque</h2>
+          <p className="text-muted-foreground">Registro global e imutável de todas as alterações de estoque.</p>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-lg border border-gray-200">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input placeholder="Buscar por produto, usuário ou documento..." className="pl-9" />
+      {summary && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-card/50 backdrop-blur-sm p-4 rounded-2xl border border-border/50 shadow-sm transition-all hover:border-primary/20">
+            <p className="text-sm font-semibold text-muted-foreground">Entradas Totais</p>
+            <p className="text-3xl font-black text-success mt-1">+{summary.totalIn}</p>
+          </div>
+          <div className="bg-card/50 backdrop-blur-sm p-4 rounded-2xl border border-border/50 shadow-sm transition-all hover:border-primary/20">
+            <p className="text-sm font-semibold text-muted-foreground">Saídas Totais</p>
+            <p className="text-3xl font-black text-destructive mt-1">-{summary.totalOut}</p>
+          </div>
+          <div className="bg-card/50 backdrop-blur-sm p-4 rounded-2xl border border-border/50 shadow-sm transition-all hover:border-primary/20">
+            <p className="text-sm font-semibold text-muted-foreground">Movimentações no Filtro</p>
+            <p className="text-3xl font-black text-foreground mt-1">{totalCount}</p>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            Filtros
-          </Button>
-        </div>
-      </div>
+      )}
 
-      <div className="bg-white rounded-lg border border-gray-200">
-        <Table>
+      {/* Filter Form Component */}
+      <MovementsFilterForm 
+        products={products} 
+        warehouses={warehouses} 
+        defaultValues={{
+          q: search || "",
+          type: typeParam || "",
+          productId: productParam || "",
+          warehouseId: warehouseParam || "",
+          referenceType: refTypeParam || ""
+        }} 
+      />
+
+      <div className="bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 overflow-hidden shadow-sm">
+        {/* Mobile View: Cards */}
+        <div className="md:hidden divide-y divide-border/50">
+          {movements.length === 0 ? (
+            <div className="p-6 text-center text-muted-foreground">
+              Nenhuma movimentação registrada para este filtro.
+            </div>
+          ) : (
+            movements.map((mov) => {
+              const isPositive = ['ENTRY', 'ADJUSTMENT_IN', 'TRANSFER_IN', 'RETURN'].includes(mov.type)
+              let badgeVariant = 'secondary'
+              let typeLabel = mov.type
+              
+              if (mov.type === 'ENTRY') { badgeVariant = 'success'; typeLabel = 'Entrada' }
+              if (mov.type === 'EXIT') { badgeVariant = 'destructive'; typeLabel = 'Saída' }
+              if (mov.type === 'ADJUSTMENT_IN') { badgeVariant = 'outline'; typeLabel = 'Ajuste (+)' }
+              if (mov.type === 'ADJUSTMENT_OUT') { badgeVariant = 'outline'; typeLabel = 'Ajuste (-)' }
+              if (mov.type === 'TRANSFER_IN') { badgeVariant = 'secondary'; typeLabel = 'Transf. (+)' }
+              if (mov.type === 'TRANSFER_OUT') { badgeVariant = 'secondary'; typeLabel = 'Transf. (-)' }
+              if (mov.type === 'RETURN') { badgeVariant = 'default'; typeLabel = 'Devolução' }
+              
+              return (
+                <div key={mov.id} className="p-4 space-y-3 hover:bg-muted/30 transition-colors">
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex flex-col">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase">{mov.product.code}</span>
+                      <span className="font-bold text-base text-foreground leading-tight">
+                        {mov.product.name}
+                      </span>
+                    </div>
+                    {/* @ts-expect-error: variant string literal mismatch */}
+                    <Badge variant={badgeVariant} className="text-[10px] px-2 py-0.5">
+                      {typeLabel}
+                    </Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Qtd</span>
+                      <span className={`font-bold ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+                        {isPositive ? '+' : '-'}{mov.quantity} <span className="text-xs font-normal opacity-70">{mov.product.unit.code}</span>
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-xs text-muted-foreground block">Local</span>
+                      <span className="font-medium text-foreground">{mov.location.code}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                    <div className="flex flex-col text-xs text-muted-foreground">
+                      <span>{new Date(mov.createdAt).toLocaleString('pt-BR')}</span>
+                      <span>Por: {mov.performedBy.name.split(' ')[0]}</span>
+                    </div>
+                    <Link href={`/movements/${mov.id}`}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Eye className="h-4 w-4 text-primary" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+
+        {/* Desktop View: Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Data/Hora</TableHead>
@@ -48,13 +195,14 @@ export default async function MovementsPage() {
               <TableHead>Local / Origem</TableHead>
               <TableHead>Documento</TableHead>
               <TableHead>Usuário</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {movements.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-gray-500">
-                  Nenhuma movimentação registrada.
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
+                  Nenhuma movimentação registrada para este filtro.
                 </TableCell>
               </TableRow>
             ) : (
@@ -74,12 +222,12 @@ export default async function MovementsPage() {
                 
                 return (
                   <TableRow key={mov.id}>
-                    <TableCell className="whitespace-nowrap text-sm text-gray-500">
+                    <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                       {new Date(mov.createdAt).toLocaleString('pt-BR')}
                     </TableCell>
                     <TableCell className="font-medium">
-                      <div className="text-gray-900">{mov.product.name}</div>
-                      <div className="text-xs text-gray-500 font-normal">{mov.product.code}</div>
+                      <div className="text-foreground">{mov.product.name}</div>
+                      <div className="text-xs text-muted-foreground font-normal">{mov.product.code}</div>
                     </TableCell>
                     <TableCell>
                       {/* @ts-expect-error: variant string literal mismatch */}
@@ -88,17 +236,24 @@ export default async function MovementsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell className={`text-right font-bold ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
-                      {isPositive ? '+' : ''}{mov.quantity} <span className="text-xs font-normal opacity-70">{mov.product.unit.code}</span>
+                      {isPositive ? '+' : '-'}{mov.quantity} <span className="text-xs font-normal opacity-70">{mov.product.unit.code}</span>
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">{mov.location.code}</div>
-                      <div className="text-xs text-gray-500">{mov.location.warehouse.name}</div>
+                      <div className="text-xs text-muted-foreground">{mov.location.warehouse.name}</div>
                     </TableCell>
                     <TableCell className="text-sm">
                       {mov.documentNumber || '-'}
                     </TableCell>
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-muted-foreground">
                       {mov.performedBy.name.split(' ')[0]}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Link href={`/movements/${mov.id}`}>
+                        <Button variant="ghost" size="icon">
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 )
@@ -106,6 +261,32 @@ export default async function MovementsPage() {
             )}
           </TableBody>
         </Table>
+        </div>
+
+        {/* Pagination controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t">
+            <div className="text-sm text-muted-foreground">
+              Mostrando {skip + 1} a {Math.min(skip + pageSize, totalCount)} de {totalCount} resultados
+            </div>
+            <div className="flex gap-2">
+              {page > 1 ? (
+                <Link href={`/movements?${new URLSearchParams({...searchParams, page: String(page - 1)}).toString()}`}>
+                  <Button variant="outline" size="sm"><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
+                </Link>
+              ) : (
+                <Button variant="outline" size="sm" disabled><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
+              )}
+              {page < totalPages ? (
+                <Link href={`/movements?${new URLSearchParams({...searchParams, page: String(page + 1)}).toString()}`}>
+                  <Button variant="outline" size="sm">Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
+                </Link>
+              ) : (
+                <Button variant="outline" size="sm" disabled>Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

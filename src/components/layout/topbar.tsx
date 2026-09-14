@@ -1,47 +1,102 @@
 "use client"
-import { Bell, Menu, Search } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { useState, useEffect } from "react"
+import { createPortal } from "react-dom"
+import { Bell, Menu, Search, ArrowLeft } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
 import Link from "next/link"
 import { logoutAction } from "@/app/auth-actions"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Sidebar } from "./sidebar"
 
-export function Topbar({ user }: { user?: { name: string; email: string; role: string } | null }) {
+export function Topbar({ user }: { user?: { name: string; email: string; roles: string[] } | null }) {
   const pathname = usePathname()
+  const router = useRouter()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
   
-  // A simple way to get page title from pathname
-  const pageTitle = pathname.split('/').filter(Boolean).pop()?.replace('-', ' ') || 'Dashboard'
-  const titleFormatted = pageTitle.charAt(0).toUpperCase() + pageTitle.slice(1)
+  const titleMap: Record<string, string> = {
+    'new': 'Novo',
+    'edit': 'Editar',
+    'users': 'Usuários',
+    'products': 'Produtos',
+    'categories': 'Categorias',
+    'units': 'Unidades',
+    'locations': 'Localizações',
+    'movements': 'Movimentações',
+    'receipts': 'Entradas',
+    'issues': 'Saídas',
+    'requests': 'Requisições',
+    'returns': 'Devoluções',
+    'inventory': 'Inventários',
+    'collector': 'Coletor',
+    'import': 'Importar',
+    'export': 'Exportar',
+    'reports': 'Relatórios',
+    'api': 'API',
+    'admin': 'Administração',
+    'settings': 'Configurações',
+    'notifications': 'Notificações',
+  }
+
+  const segments = pathname.split('/').filter(Boolean)
+  const lastSegment = segments[segments.length - 1] || 'dashboard'
+  const mappedTitle = titleMap[lastSegment] || lastSegment.replace('-', ' ')
+  const titleFormatted = mappedTitle.charAt(0).toUpperCase() + mappedTitle.slice(1)
+
+  const rootPaths = [
+    '/dashboard', '/products', '/categories', '/units', '/locations', '/movements', 
+    '/receipts', '/issues', '/requests', '/returns', '/inventory', '/collector', 
+    '/import', '/export', '/reports', '/api', '/admin', '/admin/users', '/admin/settings', 
+    '/notifications'
+  ]
+  const showBackButton = !rootPaths.includes(pathname)
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-gray-200 bg-white px-6">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-6 shadow-sm shadow-black/5">
       <div className="flex items-center gap-4">
-        <button className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-md">
+        <button 
+          className="lg:hidden p-2 text-muted-foreground hover:bg-accent rounded-md"
+          onClick={() => setIsMobileMenuOpen(true)}
+        >
           <Menu className="h-5 w-5" />
         </button>
-        <h1 className="text-lg font-semibold text-gray-900">
+        {showBackButton && (
+          <button 
+            onClick={() => router.back()}
+            className="p-1.5 mr-1 text-muted-foreground hover:bg-muted rounded-full transition-colors hidden sm:block"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        )}
+        <h1 className="text-xl font-bold tracking-tight text-foreground bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
           {titleFormatted}
         </h1>
       </div>
       
       <div className="flex items-center gap-4">
         <div className="relative hidden sm:block">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <input 
             type="text" 
             placeholder="Busca global..." 
-            className="h-9 w-64 rounded-md border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="h-9 w-64 rounded-full border border-border/50 bg-muted/50 pl-9 pr-4 text-sm transition-all focus:w-72 focus:border-primary focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
           />
         </div>
-        <Link href="/notifications" className="relative p-2 text-gray-500 hover:bg-gray-100 rounded-md">
+        <ThemeToggle />
+        <Link href="/notifications" className="relative p-2 text-muted-foreground hover:bg-accent rounded-md">
           <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-red-500"></span>
         </Link>
         {user && (
-          <div className="flex items-center gap-3 ml-2 border-l pl-4">
+          <div className="flex items-center gap-3 ml-2 border-l border-border/50 pl-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-gray-900 leading-none">{user.name}</p>
-              <p className="text-xs text-gray-500 mt-1">{user.role}</p>
+              <p className="text-sm font-bold text-foreground leading-none">{user.name}</p>
+              <p className="text-xs text-muted-foreground mt-1 tracking-wide uppercase">{user.roles.join(', ')}</p>
             </div>
-            <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+            <div className="h-9 w-9 rounded-full bg-primary/10 text-primary flex items-center justify-center font-black text-sm shadow-inner ring-2 ring-background">
               {user.name.charAt(0)}
             </div>
             <button 
@@ -53,6 +108,20 @@ export function Topbar({ user }: { user?: { name: string; email: string; role: s
           </div>
         )}
       </div>
+
+      {/* Mobile Sidebar Overlay via Portal */}
+      {isMobileMenuOpen && typeof window !== 'undefined' && createPortal(
+        <div className="fixed inset-0 z-[100] flex lg:hidden">
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setIsMobileMenuOpen(false)}
+          ></div>
+          <div className="relative flex w-[280px] max-w-[80vw] flex-1 flex-col bg-background shadow-2xl animate-in slide-in-from-left duration-200">
+            <Sidebar user={user} />
+          </div>
+        </div>,
+        document.body
+      )}
     </header>
   )
 }
