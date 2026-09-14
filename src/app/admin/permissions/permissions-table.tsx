@@ -70,7 +70,7 @@ export function PermissionsTable({ roles, permissions }: PermissionsTableProps) 
                       <Switch 
                         checked={isAdmin || hasPerm} 
                         disabled={isAdmin || isLoading}
-                        onCheckedChange={(checked) => handleToggle(role.id, permission.id, checked)}
+                        onChange={(e) => handleToggle(role.id, permission.id, e.target.checked)}
                         aria-label={`Permissão ${permission.key} para ${role.name}`}
                       />
                     </TableCell>
