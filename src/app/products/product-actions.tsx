@@ -5,11 +5,17 @@ import { MoreHorizontal, Pencil, QrCode, Printer } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { QRCodeSVG } from "qrcode.react"
+import { createPortal } from "react-dom"
 
 export function ProductActions({ productId, productCode, productName }: { productId: string, productCode: string, productName: string }) {
   const [isOpen, setIsOpen] = useState(false)
   const [showQrModal, setShowQrModal] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -27,6 +33,44 @@ export function ProductActions({ productId, productCode, productName }: { produc
       window.print()
     }, 100)
   }
+
+  const qrModalContent = showQrModal ? (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl border border-gray-200 zoom-in-95 animate-in duration-200 text-black print-exact">
+        <div className="text-center mb-6">
+          <h2 className="text-lg font-black tracking-tight">{productCode}</h2>
+          <p className="text-sm text-gray-500 line-clamp-2 mt-1">{productName}</p>
+        </div>
+        
+        <div className="flex justify-center bg-white p-4 rounded-xl border-2 border-dashed border-gray-200">
+          <QRCodeSVG 
+            value={productCode} 
+            size={200}
+            bgColor={"#ffffff"}
+            fgColor={"#000000"}
+            level={"H"}
+          />
+        </div>
+        
+        <div className="mt-8 flex justify-between gap-3 print-hidden">
+          <Button 
+            variant="outline" 
+            onClick={() => setShowQrModal(false)}
+            className="rounded-xl flex-1 text-black border-gray-300 hover:bg-gray-100"
+          >
+            Fechar
+          </Button>
+          <Button 
+            onClick={handlePrint}
+            className="rounded-xl flex-1 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md flex items-center justify-center gap-2"
+          >
+            <Printer className="h-4 w-4" />
+            Imprimir
+          </Button>
+        </div>
+      </div>
+    </div>
+  ) : null
 
   return (
     <div className="relative flex justify-end" ref={dropdownRef}>
@@ -60,44 +104,8 @@ export function ProductActions({ productId, productCode, productName }: { produc
         </div>
       )}
 
-      {/* MODAL DO QR CODE */}
-      {showQrModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-2xl border border-gray-200 zoom-in-95 animate-in duration-200 text-black print-exact">
-            <div className="text-center mb-6">
-              <h2 className="text-lg font-black tracking-tight">{productCode}</h2>
-              <p className="text-sm text-gray-500 line-clamp-2 mt-1">{productName}</p>
-            </div>
-            
-            <div className="flex justify-center bg-white p-4 rounded-xl border-2 border-dashed border-gray-200">
-              <QRCodeSVG 
-                value={productCode} 
-                size={200}
-                bgColor={"#ffffff"}
-                fgColor={"#000000"}
-                level={"H"}
-              />
-            </div>
-            
-            <div className="mt-8 flex justify-between gap-3 print-hidden">
-              <Button 
-                variant="outline" 
-                onClick={() => setShowQrModal(false)}
-                className="rounded-xl flex-1 text-black border-gray-300"
-              >
-                Fechar
-              </Button>
-              <Button 
-                onClick={handlePrint}
-                className="rounded-xl flex-1 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md flex items-center gap-2"
-              >
-                <Printer className="h-4 w-4" />
-                Imprimir
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* MODAL DO QR CODE (Renderizado no Portal) */}
+      {mounted && showQrModal && createPortal(qrModalContent, document.body)}
     </div>
   )
 }

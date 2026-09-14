@@ -44,39 +44,60 @@ export default async function UnitsPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-card/40 backdrop-blur-md rounded-2xl border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
         {/* Mobile View: Cards */}
-        <div className="md:hidden divide-y divide-border">
+        <div className="md:hidden divide-y divide-border/50">
           {units.length === 0 ? (
-            <div className="p-6 text-center text-muted-foreground">
-              Você ainda não possui unidades cadastradas.
+            <div className="p-8 text-center">
+              <div className="mx-auto h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+                <Search className="h-6 w-6 text-muted-foreground/50" />
+              </div>
+              <p className="text-base font-medium text-foreground mb-1">Nenhuma unidade</p>
+              <p className="text-sm text-muted-foreground">Você ainda não possui unidades cadastradas.</p>
             </div>
           ) : (
             units.map((unit) => (
-              <div key={unit.id} className="p-4 space-y-3 bg-card hover:bg-muted/30 transition-colors">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">{unit.code}</span>
-                    <span className="font-bold text-base text-foreground leading-tight">
-                      {unit.name}
-                    </span>
+              <div key={unit.id} className="p-5 space-y-4 bg-transparent hover:bg-muted/20 transition-colors">
+                <div className="flex justify-between items-start gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm uppercase">
+                      {unit.code.substring(0, 2)}
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-base text-foreground leading-tight">
+                          {unit.name}
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 rounded uppercase">{unit.code}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground line-clamp-1 mt-0.5">
+                        {unit.description || 'Sem descrição'}
+                      </span>
+                    </div>
                   </div>
-                  <Badge variant={unit.status === 'ACTIVE' ? 'success' : 'secondary'} className="text-[10px]">
-                    {unit.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                  </Badge>
+                  {unit.status === 'ACTIVE' ? (
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-medium whitespace-nowrap">
+                      <span className="h-1 w-1 rounded-full bg-emerald-600 animate-pulse"></span>
+                      Ativo
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-600 border border-zinc-500/20 text-[10px] font-medium whitespace-nowrap">
+                      <span className="h-1 w-1 rounded-full bg-zinc-600"></span>
+                      Inativo
+                    </div>
+                  )}
                 </div>
                 
-                <div className="text-sm text-muted-foreground">
-                  {unit.description || '-'}
-                </div>
-                
-                <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">{unit._count.products}</span> produtos
+                <div className="flex items-center justify-between pt-3 border-t border-border/30">
+                  <div className="flex items-center gap-2">
+                    <div className="px-2.5 py-1 rounded-full bg-secondary/50 border border-border/50 text-xs font-medium text-muted-foreground">
+                      <span className="text-foreground font-semibold mr-1">{unit._count.products}</span>
+                      produtos
+                    </div>
                   </div>
                   <Link href={`/units/${unit.id}/edit`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Edit className="h-4 w-4 text-blue-600" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-blue-500/10 hover:text-blue-600 transition-colors">
+                      <Edit className="h-4 w-4" />
                     </Button>
                   </Link>
                 </div>
@@ -86,41 +107,83 @@ export default async function UnitsPage() {
         </div>
 
         {/* Desktop View: Table */}
-        <div className="hidden md:block overflow-x-auto">
-          <Table>
+        <div className="hidden md:block overflow-x-auto p-1">
+          <Table className="w-full">
           <TableHeader>
-            <TableRow>
-              <TableHead>Código / Sigla</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Descrição</TableHead>
-              <TableHead className="text-right">Qtd. Produtos</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+            <TableRow className="border-b border-border/40 hover:bg-transparent">
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Código / Sigla</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Nome</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Descrição</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-center">Qtd. Produtos</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Status</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {units.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                  Você ainda não possui unidades cadastradas.
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={6} className="text-center py-16">
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    <div className="rounded-full bg-muted/50 p-4">
+                      <Search className="h-8 w-8 text-muted-foreground/50" />
+                    </div>
+                    <p className="text-lg font-medium text-foreground">Nenhuma unidade encontrada</p>
+                    <p className="text-sm text-muted-foreground">Você ainda não possui unidades cadastradas no sistema.</p>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
               units.map((unit) => (
-                <TableRow key={unit.id}>
-                  <TableCell className="font-medium text-foreground">{unit.code}</TableCell>
-                  <TableCell>{unit.name}</TableCell>
-                  <TableCell>{unit.description || '-'}</TableCell>
-                  <TableCell className="text-right">{unit._count.products}</TableCell>
-                  <TableCell>
-                    <Badge variant={unit.status === 'ACTIVE' ? 'success' : 'secondary'}>
-                      {unit.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                    </Badge>
+                <TableRow 
+                  key={unit.id}
+                  className="group border-b border-border/40 hover:bg-primary/[0.02] transition-all duration-300 ease-in-out"
+                >
+                  <TableCell className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 uppercase">
+                        {unit.code.substring(0, 2)}
+                      </div>
+                      <span className="font-bold text-sm text-muted-foreground tracking-tight">
+                        {unit.code}
+                      </span>
+                    </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-6 py-4 font-semibold text-base text-foreground group-hover:text-primary transition-colors duration-300">
+                    {unit.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {unit.description ? (
+                      <span className="text-muted-foreground line-clamp-1">{unit.description}</span>
+                    ) : (
+                      <span className="text-muted-foreground/40 italic">Sem descrição</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-center">
+                    <div className="inline-flex items-center justify-center min-w-[2.5rem] px-3 py-1 rounded-full bg-secondary/60 border border-border/50 text-sm font-semibold text-foreground">
+                      {unit._count.products}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    {unit.status === 'ACTIVE' ? (
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-sm font-medium">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-[pulse_2s_ease-in-out_infinite]"></span>
+                        Ativo
+                      </div>
+                    ) : (
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-500/10 text-zinc-600 border border-zinc-500/20 text-sm font-medium">
+                        <span className="h-1.5 w-1.5 rounded-full bg-zinc-600"></span>
+                        Inativo
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
                     <Link href={`/units/${unit.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4 text-blue-600" />
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-9 w-9 rounded-full opacity-0 group-hover:opacity-100 hover:bg-blue-500/10 hover:text-blue-600 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
+                      >
+                        <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
                   </TableCell>

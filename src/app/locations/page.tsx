@@ -46,39 +46,65 @@ export default async function LocationsPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl border border-border overflow-hidden">
+      <div className="bg-card/40 backdrop-blur-md rounded-2xl border border-border/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
         {/* Mobile View: Cards */}
-        <div className="md:hidden divide-y divide-border">
+        <div className="md:hidden divide-y divide-border/50">
           {locations.length === 0 ? (
-            <div className="p-6 text-center text-muted-foreground">
-              Você ainda não possui localizações cadastradas.
+            <div className="p-8 text-center">
+              <div className="mx-auto h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+                <Search className="h-6 w-6 text-muted-foreground/50" />
+              </div>
+              <p className="text-base font-medium text-foreground mb-1">Nenhuma localização</p>
+              <p className="text-sm text-muted-foreground">Você ainda não possui localizações cadastradas.</p>
             </div>
           ) : (
             locations.map((location) => (
-              <div key={location.id} className="p-4 space-y-3 bg-card hover:bg-muted/30 transition-colors">
-                <div className="flex justify-between items-start gap-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">{location.warehouse.code}</span>
-                    <span className="font-bold text-base text-foreground leading-tight">
-                      {location.code} - {location.name}
-                    </span>
+              <div key={location.id} className="p-5 space-y-4 bg-transparent hover:bg-muted/20 transition-colors">
+                <div className="flex justify-between items-start gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm uppercase">
+                      {location.code.substring(0, 2)}
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-base text-foreground leading-tight">
+                          {location.name}
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground bg-muted px-1.5 rounded uppercase">{location.code}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wider font-semibold">
+                        {location.warehouse.code}
+                      </span>
+                    </div>
                   </div>
-                  <Badge variant={location.status === 'ACTIVE' ? 'success' : 'secondary'} className="text-[10px]">
-                    {location.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                  </Badge>
+                  {location.status === 'ACTIVE' ? (
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-[10px] font-medium whitespace-nowrap">
+                      <span className="h-1 w-1 rounded-full bg-emerald-600 animate-pulse"></span>
+                      Ativo
+                    </div>
+                  ) : (
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-500/10 text-zinc-600 border border-zinc-500/20 text-[10px] font-medium whitespace-nowrap">
+                      <span className="h-1 w-1 rounded-full bg-zinc-600"></span>
+                      Inativo
+                    </div>
+                  )}
                 </div>
                 
-                <div className="text-sm text-muted-foreground">
-                  <span className="font-medium">Pai:</span> {location.parent ? `${location.parent.code} - ${location.parent.name}` : '-'}
+                <div className="text-sm p-3 bg-muted/30 rounded-lg border border-border/30">
+                  <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block mb-0.5">Localização Pai</span>
+                  <span className="font-medium text-foreground">{location.parent ? `${location.parent.code} - ${location.parent.name}` : '-'}</span>
                 </div>
                 
-                <div className="flex items-center justify-between pt-2 border-t border-border/50">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">{location._count.stocks}</span> itens em estoque
+                <div className="flex items-center justify-between pt-3 border-t border-border/30">
+                  <div className="flex items-center gap-2">
+                    <div className="px-2.5 py-1 rounded-full bg-secondary/50 border border-border/50 text-xs font-medium text-muted-foreground">
+                      <span className="text-foreground font-semibold mr-1">{location._count.stocks}</span>
+                      itens em estoque
+                    </div>
                   </div>
                   <Link href={`/locations/${location.id}/edit`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Edit className="h-4 w-4 text-blue-600" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-blue-500/10 hover:text-blue-600 transition-colors">
+                      <Edit className="h-4 w-4" />
                     </Button>
                   </Link>
                 </div>
@@ -88,45 +114,80 @@ export default async function LocationsPage() {
         </div>
 
         {/* Desktop View: Table */}
-        <div className="hidden md:block overflow-x-auto">
-          <Table>
+        <div className="hidden md:block overflow-x-auto p-1">
+          <Table className="w-full">
           <TableHeader>
-            <TableRow>
-              <TableHead>Almoxarifado</TableHead>
-              <TableHead>Código</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>Localização Pai</TableHead>
-              <TableHead className="text-right">Produtos</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+            <TableRow className="border-b border-border/40 hover:bg-transparent">
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Almoxarifado</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Código</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Nome</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Localização Pai</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-center">Produtos</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider">Status</TableHead>
+              <TableHead className="h-14 px-6 font-semibold text-muted-foreground text-sm uppercase tracking-wider text-right">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {locations.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
-                  Você ainda não possui localizações cadastradas.
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={7} className="text-center py-16">
+                  <div className="flex flex-col items-center justify-center space-y-3">
+                    <div className="rounded-full bg-muted/50 p-4">
+                      <Search className="h-8 w-8 text-muted-foreground/50" />
+                    </div>
+                    <p className="text-lg font-medium text-foreground">Nenhuma localização encontrada</p>
+                    <p className="text-sm text-muted-foreground">Você ainda não possui localizações cadastradas no sistema.</p>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
               locations.map((location) => (
-                <TableRow key={location.id}>
-                  <TableCell className="font-medium text-foreground">{location.warehouse.code}</TableCell>
-                  <TableCell className="font-medium">{location.code}</TableCell>
-                  <TableCell>{location.name}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
+                <TableRow 
+                  key={location.id}
+                  className="group border-b border-border/40 hover:bg-primary/[0.02] transition-all duration-300 ease-in-out"
+                >
+                  <TableCell className="px-6 py-4">
+                    <span className="font-semibold text-sm text-muted-foreground tracking-tight bg-muted/30 px-2.5 py-1 rounded-md border border-border/30">
+                      {location.warehouse.code}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-6 py-4">
+                    <span className="font-bold text-sm text-foreground bg-secondary/50 px-2 py-1 rounded border border-border/50 uppercase">
+                      {location.code}
+                    </span>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 font-semibold text-base text-foreground group-hover:text-primary transition-colors duration-300">
+                    {location.name}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-muted-foreground text-sm">
                     {location.parent ? `${location.parent.code} - ${location.parent.name}` : '-'}
                   </TableCell>
-                  <TableCell className="text-right">{location._count.stocks}</TableCell>
-                  <TableCell>
-                    <Badge variant={location.status === 'ACTIVE' ? 'success' : 'secondary'}>
-                      {location.status === 'ACTIVE' ? 'Ativo' : 'Inativo'}
-                    </Badge>
+                  <TableCell className="px-6 py-4 text-center">
+                    <div className="inline-flex items-center justify-center min-w-[2.5rem] px-3 py-1 rounded-full bg-secondary/60 border border-border/50 text-sm font-semibold text-foreground">
+                      {location._count.stocks}
+                    </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-6 py-4">
+                    {location.status === 'ACTIVE' ? (
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-sm font-medium">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 animate-[pulse_2s_ease-in-out_infinite]"></span>
+                        Ativo
+                      </div>
+                    ) : (
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-500/10 text-zinc-600 border border-zinc-500/20 text-sm font-medium">
+                        <span className="h-1.5 w-1.5 rounded-full bg-zinc-600"></span>
+                        Inativo
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="px-6 py-4 text-right">
                     <Link href={`/locations/${location.id}/edit`}>
-                      <Button variant="ghost" size="icon">
-                        <Edit className="h-4 w-4 text-blue-600" />
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        className="h-9 w-9 rounded-full opacity-0 group-hover:opacity-100 hover:bg-blue-500/10 hover:text-blue-600 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
+                      >
+                        <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
                   </TableCell>

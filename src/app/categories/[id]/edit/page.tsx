@@ -8,13 +8,13 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { updateCategoryAction } from "../../actions"
 
-export default async function EditCategoryPage({
-  params,
-  searchParams
-}: {
-  params: { id: string }
-  searchParams: { error?: string }
+export default async function EditCategoryPage(props: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const category = await db.productCategory.findUnique({
     where: { id: params.id }
   })

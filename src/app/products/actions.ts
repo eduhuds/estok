@@ -8,7 +8,7 @@ export async function createProductAction(formData: FormData) {
   const session = await getSession()
   if (!session) redirect("/login")
 
-  const code = formData.get("code") as string
+  let code = formData.get("code") as string
   const barcode = formData.get("barcode") as string || null
   const name = formData.get("name") as string
   const shortDescription = formData.get("shortDescription") as string || null
@@ -19,6 +19,32 @@ export async function createProductAction(formData: FormData) {
   const brand = formData.get("brand") as string || null
   const model = formData.get("model") as string || null
   const defaultLocationId = formData.get("defaultLocationId") as string || null
+
+  if (!code && categoryId) {
+    const category = await db.productCategory.findUnique({ where: { id: categoryId } })
+    if (category) {
+      const prefix = category.name
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z]/g, "")
+        .substring(0, 3)
+        .toUpperCase()
+        .padEnd(3, 'X')
+      
+      const count = await db.product.count({ where: { categoryId } })
+      
+      let isUnique = false
+      let attempts = count + 1
+      while (!isUnique) {
+        code = `${prefix}-${String(attempts).padStart(3, '0')}`
+        const existingCode = await db.product.findUnique({ where: { code } })
+        if (!existingCode) {
+          isUnique = true
+        } else {
+          attempts++
+        }
+      }
+    }
+  }
 
   if (!code || !name || !categoryId || !unitId) {
     redirect("/products/new?error=missing_fields")

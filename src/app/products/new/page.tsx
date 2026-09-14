@@ -34,8 +34,11 @@ export default async function NewProductPage() {
               <h3 className="text-lg font-medium border-b pb-2">Informações Básicas</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Código Interno</label>
-                  <Input name="code" placeholder="Ex: MAT-001" required />
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">Código Interno</label>
+                    <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded">Automático</span>
+                  </div>
+                  <Input name="code" placeholder="Deixe em branco para gerar automático" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Código de Barras</label>

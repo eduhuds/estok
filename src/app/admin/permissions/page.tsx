@@ -1,8 +1,7 @@
 import { requirePermissionPage } from "@/lib/permissions"
 import { db } from "@/lib/db"
 import { ShieldCheck } from "lucide-react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Switch } from "@/components/ui/switch"
+import { PermissionsTable } from "./permissions-table"
 
 export default async function PermissionsPage() {
   await requirePermissionPage('CONFIG_MANAGE')
@@ -28,43 +27,7 @@ export default async function PermissionsPage() {
         </div>
       </div>
 
-      <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className="bg-muted">
-              <TableRow>
-                <TableHead className="w-[300px]">Permissão</TableHead>
-                {roles.map(role => (
-                  <TableHead key={role.id} className="text-center font-bold">{role.name}</TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {permissions.map(permission => (
-                <TableRow key={permission.id}>
-                  <TableCell>
-                    <p className="font-semibold text-foreground">{permission.name}</p>
-                    <p className="text-xs text-muted-foreground font-mono">{permission.key}</p>
-                  </TableCell>
-                  {roles.map(role => {
-                    const hasPerm = role.permissions.some(rp => rp.permissionId === permission.id)
-                    const isAdmin = role.name === 'ADMIN'
-                    return (
-                      <TableCell key={`${role.id}-${permission.id}`} className="text-center">
-                        <Switch 
-                          checked={isAdmin || hasPerm} 
-                          disabled={isAdmin} // Admin sempre tem tudo
-                          aria-label={`Permissão ${permission.key} para ${role.name}`}
-                        />
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <PermissionsTable roles={roles} permissions={permissions} />
     </div>
   )
 }
