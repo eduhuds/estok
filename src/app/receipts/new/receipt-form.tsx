@@ -11,6 +11,7 @@ import {  Save, Plus, Trash2, CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { createReceiptAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
+import { formatCurrency } from "@/lib/utils"
 
 type ItemData = {
   id: string
@@ -35,7 +36,11 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
   }
 
   const updateItem = (id: string, field: keyof ItemData, value: string | number) => {
-    setItems(items.map(i => i.id === id ? { ...i, [field]: value } : i))
+    setItems(prev => prev.map(i => i.id === id ? { ...i, [field]: value } : i))
+  }
+
+  const updateItemFields = (id: string, fields: Partial<ItemData>) => {
+    setItems(prev => prev.map(i => i.id === id ? { ...i, ...fields } : i))
   }
 
   const total = items.reduce((sum, item) => sum + (item.quantity * item.unitCost), 0)
@@ -121,7 +126,13 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                         name="item_productId" 
                         required 
                         value={item.productId}
-                        onChange={val => updateItem(item.id, "productId", val)}
+                        onChange={val => {
+                          const product = products.find((p: any) => p.id === val)
+                          updateItemFields(item.id, { 
+                            productId: val, 
+                            unitCost: product && product.averageCost ? Number(product.averageCost) : 0 
+                          })
+                        }}
                         options={products.map((p: any) => ({
                           value: p.id,
                           label: `${p.code} - ${p.name}`
@@ -187,7 +198,7 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                 <div className="flex justify-end pt-2">
                   <div className="bg-blue-50 text-blue-900 px-4 py-2 rounded-lg font-medium border border-blue-100 flex items-center gap-3">
                     <span>Total Estimado:</span>
-                    <span className="text-xl font-bold">R$ {total.toFixed(2)}</span>
+                    <span className="text-xl font-bold">{formatCurrency(total)}</span>
                   </div>
                 </div>
               )}

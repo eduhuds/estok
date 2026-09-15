@@ -96,6 +96,26 @@ export async function createStockMovement(
     }
   })
 
+  // Atualiza o custo médio se for uma entrada ou ajuste de entrada com custo informado
+  if (['ENTRY', 'ADJUSTMENT_IN'].includes(params.type) && params.unitCost != null) {
+    const allStocks = await prisma.stock.findMany({
+      where: { productId: params.productId }
+    })
+    const totalStockAfter = allStocks.reduce((sum: number, s: any) => sum + s.quantity, 0)
+    const totalStockBefore = totalStockAfter - movementValue
+    
+    let newAverageCost = params.unitCost
+    if (totalStockBefore > 0 && totalStockAfter > 0) {
+      const currentAverageCost = Number(product.averageCost || 0)
+      newAverageCost = ((totalStockBefore * currentAverageCost) + (movementValue * params.unitCost)) / totalStockAfter
+    }
+
+    await prisma.product.update({
+      where: { id: params.productId },
+      data: { averageCost: newAverageCost }
+    })
+  }
+
   return { movement, stock: newStock }
 }
 

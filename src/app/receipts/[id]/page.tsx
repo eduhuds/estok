@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import {  Clock, Package, FileText, User, Building, MapPin } from "lucide-react"
 import { ConfirmReceiptButton } from "./confirm-button"
 import { BackButton } from "@/components/ui/back-button"
+import { formatCurrency } from "@/lib/utils"
 
 export default async function ReceiptDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getSession()
@@ -127,7 +128,7 @@ export default async function ReceiptDetailsPage({ params }: { params: Promise<{
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Valor Total</p>
-                <p className="font-medium">{receipt.total ? `R$ ${Number(receipt.total).toFixed(2)}` : '-'}</p>
+                <p className="font-medium">{receipt.total ? formatCurrency(receipt.total) : '-'}</p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Data Recebimento</p>
@@ -185,8 +186,8 @@ export default async function ReceiptDetailsPage({ params }: { params: Promise<{
                   </TableCell>
                   <TableCell className="text-right font-medium">{item.quantity}</TableCell>
                   <TableCell>{item.product.unit.code}</TableCell>
-                  <TableCell className="text-right">{item.unitCost ? `R$ ${Number(item.unitCost).toFixed(2)}` : '-'}</TableCell>
-                  <TableCell className="text-right font-medium pr-6">{item.totalCost ? `R$ ${Number(item.totalCost).toFixed(2)}` : '-'}</TableCell>
+                  <TableCell className="text-right">{item.unitCost ? formatCurrency(item.unitCost) : '-'}</TableCell>
+                  <TableCell className="text-right font-medium pr-6">{item.totalCost ? formatCurrency(item.totalCost) : '-'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

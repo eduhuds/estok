@@ -7,6 +7,7 @@ import {  Mail, Phone, MapPin, FileText } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BackButton } from "@/components/ui/back-button"
+import { formatCurrency } from "@/lib/utils"
 
 export default async function SupplierDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -109,7 +110,7 @@ export default async function SupplierDetailPage({ params }: { params: Promise<{
                         {receipt.documentDate ? new Date(receipt.documentDate).toLocaleDateString('pt-BR') : '-'}
                       </TableCell>
                       <TableCell className="text-right">
-                        {receipt.total ? `R$ ${Number(receipt.total).toFixed(2)}` : '-'}
+                        {receipt.total ? formatCurrency(receipt.total) : '-'}
                       </TableCell>
                       <TableCell>
                         <Badge variant={receipt.status === 'COMPLETED' ? 'success' : receipt.status === 'DRAFT' ? 'outline' : 'secondary'}>

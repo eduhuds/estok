@@ -6,6 +6,7 @@ import { Search, Plus, Filter, MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db"
 import { SearchInput } from "@/components/ui/search-input"
+import { formatCurrency } from "@/lib/utils"
 
 export default async function ReceiptsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const resolvedParams = await searchParams
@@ -79,7 +80,7 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
                   <div>
                     <span className="text-xs text-muted-foreground block">Valor</span>
                     <span className="font-medium text-emerald-600">
-                      {receipt.total ? `R$ ${Number(receipt.total).toFixed(2)}` : '-'}
+                      {receipt.total ? formatCurrency(receipt.total) : '-'}
                     </span>
                   </div>
                 </div>
@@ -132,7 +133,7 @@ export default async function ReceiptsPage({ searchParams }: { searchParams: Pro
                   </TableCell>
                   <TableCell className="text-center">{receipt._count.items}</TableCell>
                   <TableCell className="text-right font-medium">
-                    {receipt.total ? `R$ ${Number(receipt.total).toFixed(2)}` : '-'}
+                    {receipt.total ? formatCurrency(receipt.total) : '-'}
                   </TableCell>
                   <TableCell>
                     <Badge variant={receipt.status === 'COMPLETED' ? 'success' : receipt.status === 'DRAFT' ? 'outline' : 'secondary'}>
