@@ -7,6 +7,7 @@ import {  CheckCircle2, Clock, Smartphone, Play, StopCircle, FileText, Trash2 } 
 import Link from "next/link"
 import { finishInventoryAction, deleteInventoryAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
+import { DeleteInventoryButton } from "./delete-button"
 
 export default async function InventoryDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -79,13 +80,7 @@ export default async function InventoryDashboardPage({ params }: { params: Promi
               </Button>
             </Link>
           )}
-          <form action={deleteInventoryAction}>
-            <input type="hidden" name="id" value={inv.id} />
-            <Button variant="destructive" className="flex items-center gap-2">
-              <Trash2 className="h-4 w-4" />
-              Excluir
-            </Button>
-          </form>
+          <DeleteInventoryButton deleteAction={deleteInventoryAction} invId={inv.id} />
         </div>
       </div>
 
