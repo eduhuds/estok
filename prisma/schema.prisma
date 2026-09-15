@@ -110,6 +110,7 @@ model Product {
   model                String?
   minimumStock         Int                       @default(0)
   maximumStock         Int                       @default(0)
+  averageCost          Decimal?                  @db.Decimal(10, 2)
   defaultLocationId    String?
   defaultLocation      WarehouseLocation?        @relation(fields: [defaultLocationId], references: [id])
   status               String                    @default("ACTIVE") // ACTIVE, INACTIVE

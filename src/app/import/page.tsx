@@ -1,18 +1,101 @@
+"use client"
+
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { UploadCloud, FileType, CheckCircle2 } from "lucide-react"
+import { UploadCloud, FileType, CheckCircle2, Loader2 } from "lucide-react"
 import { BackButton } from "@/components/ui/back-button"
+import * as XLSX from "xlsx"
+import { toast } from "sonner"
 
 export default function ImportPage() {
+  const [isDragging, setIsDragging] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = () => {
+    setIsDragging(false)
+  }
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) {
+      await processFile(file)
+    }
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      await processFile(file)
+    }
+  }
+
+  const processFile = async (file: File) => {
+    try {
+      setIsProcessing(true)
+      
+      const data = await file.arrayBuffer()
+      const workbook = XLSX.read(data, { type: 'array' })
+      
+      const sheetName = workbook.SheetNames[0]
+      const worksheet = workbook.Sheets[sheetName]
+      
+      // Expected headers: 'Material', 'Especificação', 'Unidade', 'Quantidade', 'Valor', 'Pr. Unitário', 'Estq.Mínimo'
+      const jsonData = XLSX.utils.sheet_to_json(worksheet)
+
+      if (jsonData.length === 0) {
+        toast.error("A planilha está vazia.")
+        return
+      }
+
+      toast.info(`Processando ${jsonData.length} registros...`)
+
+      const response = await fetch('/api/import', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          filename: file.name,
+          data: jsonData
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Erro ao importar dados.")
+      }
+
+      const result = await response.json()
+      toast.success(`Sucesso! ${result.processedCount} produtos importados/atualizados.`)
+    } catch (error: any) {
+      console.error(error)
+      toast.error(error.message || "Erro inesperado ao processar o arquivo.")
+    } finally {
+      setIsProcessing(false)
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center gap-4">
-          <BackButton />
-          <div>
-        <h2 className="text-2xl font-bold tracking-tight">Importar Dados</h2>
-        <p className="text-muted-foreground">Importe planilhas e arquivos do sistema legado ou KCollector antigo.</p>
-      </div>
+        <BackButton />
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Importar Dados</h2>
+          <p className="text-muted-foreground">Importe planilhas de estoque e produtos.</p>
         </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="border-blue-200 bg-blue-50/50 cursor-pointer hover:border-blue-400 transition-colors">
@@ -35,34 +118,61 @@ export default function ImportPage() {
             </div>
             <div>
               <p className="font-semibold text-sm">Estoque</p>
-              <p className="text-xs text-muted-foreground">Quantidades</p>
+              <p className="text-xs text-muted-foreground">Quantidades e Custos</p>
             </div>
+            <CheckCircle2 className="h-5 w-5 text-blue-600 ml-auto opacity-100" />
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:border-gray-300 transition-colors">
+        <Card className="cursor-pointer hover:border-gray-300 transition-colors opacity-50">
           <CardContent className="p-4 flex items-center gap-3">
             <div className="h-10 w-10 bg-accent text-muted-foreground rounded-full flex items-center justify-center">
               <FileType className="h-5 w-5" />
             </div>
             <div>
               <p className="font-semibold text-sm">Inventários</p>
-              <p className="text-xs text-muted-foreground">Histórico</p>
+              <p className="text-xs text-muted-foreground">Em breve</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
       <Card>
-        <CardContent className="p-10 flex flex-col items-center justify-center text-center border-2 border-dashed border-border rounded-xl m-4 bg-muted/50">
+        <CardContent 
+          className={`p-10 flex flex-col items-center justify-center text-center border-2 border-dashed rounded-xl m-4 transition-colors ${
+            isDragging ? 'border-blue-500 bg-blue-50' : 'border-border bg-muted/50'
+          }`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           <div className="h-16 w-16 bg-card border shadow-sm rounded-full flex items-center justify-center mb-4">
-            <UploadCloud className="h-8 w-8 text-blue-500" />
+            {isProcessing ? (
+              <Loader2 className="h-8 w-8 text-blue-500 animate-spin" />
+            ) : (
+              <UploadCloud className="h-8 w-8 text-blue-500" />
+            )}
           </div>
-          <h3 className="text-lg font-semibold mb-1">Arraste seu arquivo para cá</h3>
+          <h3 className="text-lg font-semibold mb-1">
+            {isProcessing ? 'Processando arquivo...' : 'Arraste seu arquivo para cá'}
+          </h3>
           <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-            Suportamos arquivos .csv, .xls e .xlsx. O assistente ajudará no mapeamento das colunas no próximo passo.
+            Suportamos arquivos .xls e .xlsx. A planilha deve conter as colunas: Material, Especificação, Unidade, Quantidade, Pr. Unitário, Estq.Mínimo.
           </p>
-          <Button>Selecionar arquivo do computador</Button>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            className="hidden" 
+            accept=".xls,.xlsx" 
+            onChange={handleFileChange}
+            disabled={isProcessing}
+          />
+          <Button 
+            disabled={isProcessing} 
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Selecionar arquivo do computador
+          </Button>
         </CardContent>
       </Card>
     </div>

@@ -27,7 +27,7 @@ const menuGroups = [
   {
     title: "Menu Inicial",
     items: [
-      { name: "Painel Geral", href: "/dashboard", icon: LayoutDashboard },
+      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     ]
   },
   {
@@ -52,7 +52,7 @@ const menuGroups = [
   {
     title: "Inventário",
     items: [
-      { name: "Auditorias", href: "/inventory", icon: ClipboardList },
+      { name: "Inventários", href: "/inventory", icon: ClipboardList },
       { name: "Coletor (Scanner)", href: "/collector", icon: CheckSquare },
     ]
   },
@@ -86,7 +86,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
   const pathname = usePathname()
 
   return (
-    <aside className="flex h-full w-full flex-col border-r border-border/50 bg-gradient-to-br from-indigo-100 via-slate-50 to-blue-100 dark:from-slate-950 dark:via-indigo-950/90 dark:to-slate-950 shadow-xl backdrop-blur-xl">
+    <aside className="flex h-full w-full flex-col border-r border-border/50 bg-slate-50 dark:bg-slate-950">
       <div className="flex h-16 items-center border-b border-border/50 px-6 shrink-0">
         <div className="flex items-center gap-2 font-black text-xl text-primary tracking-tight">
           <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
@@ -113,7 +113,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
                         className={cn(
                           "group flex items-center gap-4 rounded-xl px-3 py-3 md:py-2 text-base md:text-sm font-medium transition-all duration-200 ease-in-out",
                           isActive 
-                            ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
+                            ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
                             : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                         )}
                       >
@@ -142,7 +142,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
             <span className="text-sm md:text-xs text-muted-foreground mt-1 truncate">{user?.roles?.join(', ') || 'Sem perfil'}</span>
           </div>
         </div>
-        <button className="mt-2 flex w-full items-center justify-center md:justify-start gap-3 rounded-xl px-3 py-3 md:py-2 text-base md:text-sm font-bold md:font-medium text-destructive md:text-muted-foreground hover:bg-destructive/10 md:hover:text-destructive transition-all duration-200">
+        <button className="mt-2 flex w-full items-center justify-center md:justify-start gap-3 rounded-xl px-3 py-3 md:py-2 text-base md:text-sm font-bold md:font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-all duration-200">
           <LogOut className="h-5 w-5 md:h-4 md:w-4" />
           Encerrar Sessão
         </button>
