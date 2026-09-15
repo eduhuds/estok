@@ -19,8 +19,27 @@ export async function createInventoryAction(formData: FormData) {
   if (locationIds.length === 0) throw new Error("Selecione pelo menos um local para contagem.")
   if (operatorIds.length === 0) throw new Error("Selecione pelo menos um operador.")
 
-  const count = await db.inventory.count()
-  const code = `INV-${new Date().getFullYear()}-${String(count + 1).padStart(3, '0')}`
+  const currentYear = new Date().getFullYear()
+  const lastInventory = await db.inventory.findFirst({
+    where: {
+      code: {
+        startsWith: `INV-${currentYear}-`
+      }
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+  })
+
+  let nextNumber = 1
+  if (lastInventory) {
+    const lastNumber = parseInt(lastInventory.code.split('-')[2], 10)
+    if (!isNaN(lastNumber)) {
+      nextNumber = lastNumber + 1
+    }
+  }
+  
+  const code = `INV-${currentYear}-${String(nextNumber).padStart(3, '0')}`
 
   const inv = await db.inventory.create({
     data: {
