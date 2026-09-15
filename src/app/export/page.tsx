@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Download, FileSpreadsheet, FileText } from "lucide-react"
@@ -31,7 +33,7 @@ export default function ExportPage() {
                 CSV
               </Button>
             </div>
-            <Button className="w-full flex items-center justify-center gap-2">
+            <Button className="w-full flex items-center justify-center gap-2" onClick={() => alert("O módulo de exportação completa estará disponível na próxima atualização (Gerador de Relatórios).")}>
               <Download className="h-4 w-4" />
               Gerar Exportação
             </Button>
@@ -54,7 +56,7 @@ export default function ExportPage() {
                 PDF
               </Button>
             </div>
-            <Button className="w-full flex items-center justify-center gap-2">
+            <Button className="w-full flex items-center justify-center gap-2" onClick={() => alert("O módulo de exportação completa estará disponível na próxima atualização (Gerador de Relatórios).")}>
               <Download className="h-4 w-4" />
               Gerar Exportação
             </Button>
@@ -77,7 +79,7 @@ export default function ExportPage() {
                 CSV
               </Button>
             </div>
-            <Button className="w-full flex items-center justify-center gap-2">
+            <Button className="w-full flex items-center justify-center gap-2" onClick={() => alert("O módulo de exportação completa estará disponível na próxima atualização (Gerador de Relatórios).")}>
               <Download className="h-4 w-4" />
               Gerar Exportação
             </Button>
@@ -100,7 +102,7 @@ export default function ExportPage() {
                 PDF
               </Button>
             </div>
-            <Button className="w-full flex items-center justify-center gap-2" variant="secondary">
+            <Button className="w-full flex items-center justify-center gap-2" onClick={() => alert("O módulo de exportação completa estará disponível na próxima atualização (Gerador de Relatórios).")}>
               Selecione o inventário...
             </Button>
           </CardContent>

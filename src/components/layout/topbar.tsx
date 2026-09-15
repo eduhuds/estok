@@ -25,6 +25,8 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
     'products': 'Produtos',
     'categories': 'Categorias',
     'units': 'Unidades',
+    'warehouses': 'Almoxarifados',
+    'suppliers': 'Fornecedores',
     'locations': 'Localizações',
     'movements': 'Movimentações',
     'receipts': 'Entradas',

@@ -5,7 +5,7 @@ import CollectorForm from "./collector-form"
 export default async function CollectorLocationPage({ 
   params 
 }: { 
-  params: { inventoryId: string, locationId: string } 
+  params: Promise<{ inventoryId: string, locationId: string }> 
 }) {
   const { inventoryId, locationId } = await params
   

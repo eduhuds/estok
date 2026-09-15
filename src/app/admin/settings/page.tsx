@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Save, Settings2 } from "lucide-react"
 import { BackButton } from "@/components/ui/back-button"
+import { updateSettingsAction } from "./actions"
 
 export default async function SettingsPage() {
   await requirePermissionPage('CONFIG_MANAGE')
@@ -16,7 +17,7 @@ export default async function SettingsPage() {
   const getBool = (key: string) => getVal(key) === "true"
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-6">
+    <form action={updateSettingsAction} className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <BackButton />
@@ -28,7 +29,7 @@ export default async function SettingsPage() {
           <p className="text-muted-foreground text-sm mt-1">Gerencie os parâmetros globais de funcionamento do Estok.</p>
         </div>
         </div>
-        <Button className="flex items-center gap-2">
+        <Button type="submit" className="flex items-center gap-2">
           <Save className="h-4 w-4" />
           Salvar Alterações
         </Button>
@@ -43,11 +44,11 @@ export default async function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Nome do Sistema</Label>
-              <Input defaultValue={getVal("SYSTEM_NAME") || "Estok"} />
+              <Input name="SYSTEM_NAME" defaultValue={getVal("SYSTEM_NAME") || "Estok"} />
             </div>
             <div className="space-y-2">
               <Label>Nome da Empresa</Label>
-              <Input defaultValue={getVal("COMPANY_NAME")} />
+              <Input name="COMPANY_NAME" defaultValue={getVal("COMPANY_NAME")} />
             </div>
           </CardContent>
         </Card>
@@ -63,14 +64,14 @@ export default async function SettingsPage() {
                 <Label>Permitir Estoque Negativo</Label>
                 <p className="text-xs text-muted-foreground">Aceitar saídas sem saldo suficiente</p>
               </div>
-              <Switch defaultChecked={getBool("ALLOW_NEGATIVE_STOCK")} />
+              <Switch name="ALLOW_NEGATIVE_STOCK" value="true" defaultChecked={getBool("ALLOW_NEGATIVE_STOCK")} />
             </div>
             <div className="flex items-center justify-between pt-2">
               <div className="space-y-0.5">
                 <Label>Exigir Localização</Label>
                 <p className="text-xs text-muted-foreground">Tornar o campo de local obrigatório</p>
               </div>
-              <Switch defaultChecked={getBool("REQUIRE_LOCATION_ON_ENTRY")} />
+              <Switch name="REQUIRE_LOCATION_ON_ENTRY" value="true" defaultChecked={getBool("REQUIRE_LOCATION_ON_ENTRY")} />
             </div>
           </CardContent>
         </Card>
@@ -86,14 +87,14 @@ export default async function SettingsPage() {
                 <Label>Exigir Aprovação de Requisições</Label>
                 <p className="text-xs text-muted-foreground">Requisições nascem pendentes</p>
               </div>
-              <Switch defaultChecked={getBool("REQUIRE_REQUEST_APPROVAL")} />
+              <Switch name="REQUIRE_REQUEST_APPROVAL" value="true" defaultChecked={getBool("REQUIRE_REQUEST_APPROVAL")} />
             </div>
             <div className="flex items-center justify-between pt-2">
               <div className="space-y-0.5">
                 <Label>Atendimento Parcial</Label>
                 <p className="text-xs text-muted-foreground">Permitir entregar menos que o pedido</p>
               </div>
-              <Switch defaultChecked={getBool("ALLOW_PARTIAL_FULFILLMENT")} />
+              <Switch name="ALLOW_PARTIAL_FULFILLMENT" value="true" defaultChecked={getBool("ALLOW_PARTIAL_FULFILLMENT")} />
             </div>
           </CardContent>
         </Card>
@@ -109,15 +110,15 @@ export default async function SettingsPage() {
                 <Label>Exigir Conferência Cega</Label>
                 <p className="text-xs text-muted-foreground">Ocultar sistema da tela do coletor</p>
               </div>
-              <Switch defaultChecked={getBool("INVENTORY_BLIND_COUNT")} />
+              <Switch name="INVENTORY_BLIND_COUNT" value="true" defaultChecked={getBool("INVENTORY_BLIND_COUNT")} />
             </div>
             <div className="space-y-2 pt-2">
               <Label>Quantidade Padrão ao Bipar</Label>
-              <Input type="number" defaultValue={getVal("SCANNER_DEFAULT_QTY") || "1"} />
+              <Input name="SCANNER_DEFAULT_QTY" type="number" defaultValue={getVal("SCANNER_DEFAULT_QTY") || "1"} />
             </div>
           </CardContent>
         </Card>
       </div>
-    </div>
+    </form>
   )
 }

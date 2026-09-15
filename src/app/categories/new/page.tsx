@@ -6,11 +6,12 @@ import Link from "next/link"
 import { createCategoryAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
 
-export default function NewCategoryPage({
+export default async function NewCategoryPage({
   searchParams,
 }: {
-  searchParams: { error?: string }
+  searchParams: Promise<{ error?: string }>
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center gap-4">
@@ -23,10 +24,10 @@ export default function NewCategoryPage({
 
       <Card>
         <CardContent className="p-6 space-y-6">
-          {searchParams.error && (
+          {resolvedSearchParams.error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-              {searchParams.error === 'O nome da categoria é obrigatório.' || searchParams.error === 'Já existe uma categoria com este nome.' 
-                ? searchParams.error 
+              {resolvedSearchParams.error === 'O nome da categoria é obrigatório.' || resolvedSearchParams.error === 'Já existe uma categoria com este nome.' 
+                ? resolvedSearchParams.error 
                 : 'Erro ao criar categoria. Verifique os dados e tente novamente.'}
             </div>
           )}

@@ -17,7 +17,7 @@ export default async function NewReceiptPage() {
       <ReceiptForm 
         suppliers={suppliers} 
         warehouses={warehouses} 
-        products={products} 
+        products={products.map(p => ({ ...p, averageCost: p.averageCost ? Number(p.averageCost) : null }))}
         locations={locations} 
       />
     </div>

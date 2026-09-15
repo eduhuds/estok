@@ -8,7 +8,7 @@ import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function ProductStockPage({ params }: { params: { productId: string } }) {
+export default async function ProductStockPage({ params }: { params: Promise<{ productId: string }> }) {
   const { productId } = await params
   
   const product = await db.product.findUnique({

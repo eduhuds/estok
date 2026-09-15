@@ -8,7 +8,7 @@ import {  Package, User, CheckCircle, Clock } from "lucide-react"
 import Link from "next/link"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function IssueDetailPage({ params }: { params: { id: string } }) {
+export default async function IssueDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   // Detalhes da saída (baseados na requisição que gerou a saída)

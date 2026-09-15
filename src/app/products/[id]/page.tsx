@@ -7,7 +7,7 @@ import {  Edit, Package, Archive } from "lucide-react"
 import Link from "next/link"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function ProductDetailPage({ params }: { params: { id: string } }) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const product = await db.product.findUnique({

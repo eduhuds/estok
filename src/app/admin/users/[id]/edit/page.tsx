@@ -6,7 +6,8 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function EditUserPage({ params }: { params: { id: string } }) {
+export default async function EditUserPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const user = await db.user.findUnique({
     where: { id: params.id },
     include: { roles: true }

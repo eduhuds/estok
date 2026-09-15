@@ -3,12 +3,12 @@ import { notFound } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {  CheckCircle2, Clock, Smartphone, Play, StopCircle, FileText } from "lucide-react"
+import {  CheckCircle2, Clock, Smartphone, Play, StopCircle, FileText, Trash2 } from "lucide-react"
 import Link from "next/link"
-import { finishInventoryAction } from "../actions"
+import { finishInventoryAction, deleteInventoryAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function InventoryDashboardPage({ params }: { params: { id: string } }) {
+export default async function InventoryDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const inv = await db.inventory.findUnique({
@@ -79,6 +79,13 @@ export default async function InventoryDashboardPage({ params }: { params: { id:
               </Button>
             </Link>
           )}
+          <form action={deleteInventoryAction}>
+            <input type="hidden" name="id" value={inv.id} />
+            <Button variant="destructive" className="flex items-center gap-2">
+              <Trash2 className="h-4 w-4" />
+              Excluir
+            </Button>
+          </form>
         </div>
       </div>
 

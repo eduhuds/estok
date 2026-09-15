@@ -110,7 +110,7 @@ model Product {
   model                String?
   minimumStock         Int                       @default(0)
   maximumStock         Int                       @default(0)
-  averageCost          Decimal?                  @db.Decimal(10, 2)
+  averageCost          Decimal?                  @db.Decimal(16, 6)
   defaultLocationId    String?
   defaultLocation      WarehouseLocation?        @relation(fields: [defaultLocationId], references: [id])
   status               String                    @default("ACTIVE") // ACTIVE, INACTIVE
@@ -207,7 +207,7 @@ model StockMovement {
   location       WarehouseLocation @relation(fields: [locationId], references: [id])
   type           String // ENTRY, EXIT, ADJUSTMENT_IN, ADJUSTMENT_OUT, TRANSFER_IN, TRANSFER_OUT, RETURN
   quantity       Int
-  unitCost       Decimal?          @db.Decimal(10, 2)
+  unitCost       Decimal?          @db.Decimal(16, 6)
   totalCost      Decimal?          @db.Decimal(10, 2)
   referenceType  String? // RECEIPT, INVENTORY_ADJUSTMENT, TRANSFER, MATERIAL_REQUEST, MATERIAL_RETURN
   referenceId    String?
@@ -272,7 +272,7 @@ model StockReceiptItem {
   locationId String
   location   WarehouseLocation @relation(fields: [locationId], references: [id])
   quantity   Int
-  unitCost   Decimal?          @db.Decimal(10, 2)
+  unitCost   Decimal?          @db.Decimal(16, 6)
   totalCost  Decimal?          @db.Decimal(10, 2)
   notes      String?
 }

@@ -9,7 +9,7 @@ import { approveRequestAction, rejectRequestAction, startSeparationAction, cance
 import { CancelRequestButton } from "./cancel-button"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function RequestDetailPage({ params }: { params: { id: string } }) {
+export default async function RequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const req = await db.materialRequest.findUnique({

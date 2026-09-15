@@ -79,3 +79,89 @@ export async function createProductAction(formData: FormData) {
 
   redirect("/products")
 }
+
+export async function updateProductAction(formData: FormData) {
+  const session = await getSession()
+  if (!session) redirect("/login")
+
+  const id = formData.get("id") as string
+  const code = formData.get("code") as string
+  const barcode = formData.get("barcode") as string || null
+  const name = formData.get("name") as string
+  const shortDescription = formData.get("shortDescription") as string || null
+  const categoryId = formData.get("categoryId") as string
+  const unitId = formData.get("unitId") as string
+  const minimumStock = parseInt(formData.get("minimumStock") as string) || 0
+  const maximumStock = parseInt(formData.get("maximumStock") as string) || 0
+  const brand = formData.get("brand") as string || null
+  const model = formData.get("model") as string || null
+  const defaultLocationId = formData.get("defaultLocationId") as string || null
+  const status = formData.get("status") as any || "ACTIVE"
+
+  if (!id || !code || !name || !categoryId || !unitId) {
+    redirect(`/products/${id}/edit?error=missing_fields`)
+  }
+
+  // Verifica duplicação de código apenas se o código mudou
+  const existing = await db.product.findUnique({ where: { code } })
+  if (existing && existing.id !== id) {
+    redirect(`/products/${id}/edit?error=duplicate_code`)
+  }
+
+  try {
+    await db.product.update({
+      where: { id },
+      data: {
+        code,
+        barcode,
+        name,
+        shortDescription,
+        categoryId,
+        unitId,
+        minimumStock,
+        maximumStock,
+        brand,
+        model,
+        defaultLocationId: defaultLocationId || null,
+        status
+      }
+    })
+  } catch (error) {
+    console.error(error)
+    redirect(`/products/${id}/edit?error=update_failed`)
+  }
+
+  redirect("/products")
+}
+
+export async function deleteProduct(id: string) {
+  const session = await getSession()
+  if (!session) throw new Error("Unauthorized")
+
+  try {
+    await db.product.delete({
+      where: { id }
+    })
+  } catch (error) {
+    console.error("Error deleting product:", error)
+    throw new Error("Failed to delete product")
+  }
+}
+
+import { revalidatePath } from "next/cache"
+
+export async function deleteAllProducts() {
+  const session = await getSession()
+  if (!session) throw new Error("Unauthorized")
+
+  try {
+    // Apaga os movimentos primeiro devido as restrições
+    await db.stockMovement.deleteMany()
+    await db.stock.deleteMany()
+    await db.product.deleteMany()
+    revalidatePath('/products')
+  } catch (error) {
+    console.error("Error deleting all products:", error)
+    throw new Error("Failed to delete all products")
+  }
+}

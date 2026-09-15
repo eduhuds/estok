@@ -13,11 +13,14 @@ export default async function EditUnitPage({
   params,
   searchParams
 }: {
-  params: { id: string }
-  searchParams: { error?: string }
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
+  const resolvedParams = await params
+  const resolvedSearchParams = await searchParams
+  
   const unit = await db.productUnit.findUnique({
-    where: { id: params.id }
+    where: { id: resolvedParams.id }
   })
 
   if (!unit) {
@@ -36,9 +39,9 @@ export default async function EditUnitPage({
 
       <Card>
         <CardContent className="p-6 space-y-6">
-          {searchParams.error && (
+          {resolvedSearchParams.error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-              {searchParams.error}
+              {resolvedSearchParams.error}
             </div>
           )}
 

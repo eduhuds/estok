@@ -8,7 +8,7 @@ import Link from "next/link"
 import DivergenceForm from "./divergence-form"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function DivergenceDetailsPage({ params }: { params: { id: string, divergenceId: string } }) {
+export default async function DivergenceDetailsPage({ params }: { params: Promise<{ id: string, divergenceId: string }> }) {
   const { id, divergenceId } = await params
   
   const div = await db.inventoryDivergence.findUnique({

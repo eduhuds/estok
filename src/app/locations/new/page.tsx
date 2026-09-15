@@ -11,8 +11,9 @@ import { BackButton } from "@/components/ui/back-button"
 export default async function NewLocationPage({
   searchParams,
 }: {
-  searchParams: { error?: string }
+  searchParams: Promise<{ error?: string }>
 }) {
+  const resolvedSearchParams = await searchParams;
   const warehouses = await db.warehouse.findMany({ where: { status: 'ACTIVE' } })
   const parentLocations = await db.warehouseLocation.findMany({ where: { status: 'ACTIVE' }, include: { warehouse: true } })
 
@@ -28,9 +29,9 @@ export default async function NewLocationPage({
 
       <Card>
         <CardContent className="p-6 space-y-6">
-          {searchParams.error && (
+          {resolvedSearchParams.error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-              {searchParams.error}
+              {resolvedSearchParams.error}
             </div>
           )}
 

@@ -7,11 +7,10 @@ import Link from "next/link"
 import { Prisma } from "@prisma/client"
 import { MovementsFilterForm } from "./filter-form"
 
-export default async function MovementsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined }
+export default async function MovementsPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1
   const pageSize = 20
   const skip = (page - 1) * pageSize
@@ -270,20 +269,34 @@ export default async function MovementsPage({
               Mostrando {skip + 1} a {Math.min(skip + pageSize, totalCount)} de {totalCount} resultados
             </div>
             <div className="flex gap-2">
-              {page > 1 ? (
-                <Link href={`/movements?${new URLSearchParams({...searchParams, page: String(page - 1)}).toString()}`}>
-                  <Button variant="outline" size="sm"><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
-                </Link>
-              ) : (
-                <Button variant="outline" size="sm" disabled><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
-              )}
-              {page < totalPages ? (
-                <Link href={`/movements?${new URLSearchParams({...searchParams, page: String(page + 1)}).toString()}`}>
-                  <Button variant="outline" size="sm">Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
-                </Link>
-              ) : (
-                <Button variant="outline" size="sm" disabled>Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
-              )}
+              {(() => {
+                const buildQuery = (p: number) => {
+                  const q = new URLSearchParams()
+                  for (const [key, value] of Object.entries(searchParams)) {
+                    if (typeof value === 'string') q.set(key, value)
+                  }
+                  q.set('page', String(p))
+                  return q.toString()
+                }
+                return (
+                  <>
+                    {page > 1 ? (
+                      <Link href={`/movements?${buildQuery(page - 1)}`}>
+                        <Button variant="outline" size="sm"><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
+                      </Link>
+                    ) : (
+                      <Button variant="outline" size="sm" disabled><ArrowLeft className="h-4 w-4 mr-2"/> Anterior</Button>
+                    )}
+                    {page < totalPages ? (
+                      <Link href={`/movements?${buildQuery(page + 1)}`}>
+                        <Button variant="outline" size="sm">Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
+                      </Link>
+                    ) : (
+                      <Button variant="outline" size="sm" disabled>Próxima <ArrowRight className="h-4 w-4 ml-2"/></Button>
+                    )}
+                  </>
+                )
+              })()}
             </div>
           </div>
         )}

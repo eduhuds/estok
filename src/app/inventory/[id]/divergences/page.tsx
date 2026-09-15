@@ -8,7 +8,7 @@ import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function DivergencesPage({ params }: { params: { id: string } }) {
+export default async function DivergencesPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const inv = await db.inventory.findUnique({
@@ -121,8 +121,8 @@ export default async function DivergencesPage({ params }: { params: { id: string
           <div className="text-sm">
             <p className="font-medium mb-1">Ajuste de Estoque</p>
             <p>
-              Nenhuma alteração automática foi feita no estoque. Os ajustes devem ser realizados através da rotina de 
-              <strong> Movimentações &gt; Ajuste de Estoque</strong> para garantir a rastreabilidade completa.
+              A função de ajuste automático está em desenvolvimento. Por enquanto, os ajustes devem ser realizados manualmente através da rotina de 
+              <strong> Movimentações &gt; Entrada/Saída</strong> para garantir a precisão do estoque.
             </p>
           </div>
         </div>

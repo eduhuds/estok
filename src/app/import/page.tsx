@@ -38,9 +38,12 @@ export default function ImportPage() {
     }
   }
 
+  const [progress, setProgress] = useState(0)
+
   const processFile = async (file: File) => {
     try {
       setIsProcessing(true)
+      setProgress(0)
       
       const data = await file.arrayBuffer()
       const workbook = XLSX.read(data, { type: 'array' })
@@ -56,31 +59,42 @@ export default function ImportPage() {
         return
       }
 
-      toast.info(`Processando ${jsonData.length} registros...`)
+      toast.info(`Iniciando importação de ${jsonData.length} registros...`)
 
-      const response = await fetch('/api/import', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filename: file.name,
-          data: jsonData
-        }),
-      })
+      const chunkSize = 100
+      let processedTotal = 0
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Erro ao importar dados.")
+      for (let i = 0; i < jsonData.length; i += chunkSize) {
+        const chunk = jsonData.slice(i, i + chunkSize)
+        
+        const response = await fetch('/api/import', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filename: file.name,
+            data: chunk
+          }),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Erro ao importar lote ${i/chunkSize + 1}.`)
+        }
+
+        const result = await response.json()
+        processedTotal += result.processedCount
+        setProgress(Math.round(((i + chunk.length) / jsonData.length) * 100))
       }
 
-      const result = await response.json()
-      toast.success(`Sucesso! ${result.processedCount} produtos importados/atualizados.`)
+      toast.success(`Sucesso! ${processedTotal} produtos importados/atualizados.`)
     } catch (error: any) {
       console.error(error)
       toast.error(error.message || "Erro inesperado ao processar o arquivo.")
     } finally {
       setIsProcessing(false)
+      setProgress(0)
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -156,9 +170,24 @@ export default function ImportPage() {
           <h3 className="text-lg font-semibold mb-1">
             {isProcessing ? 'Processando arquivo...' : 'Arraste seu arquivo para cá'}
           </h3>
-          <p className="text-sm text-muted-foreground mb-6 max-w-sm">
-            Suportamos arquivos .xls e .xlsx. A planilha deve conter as colunas: Material, Especificação, Unidade, Quantidade, Pr. Unitário, Estq.Mínimo.
-          </p>
+          {isProcessing ? (
+            <div className="w-full max-w-sm mt-4 mb-6 space-y-2">
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Progresso</span>
+                <span>{progress}%</span>
+              </div>
+              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-blue-500 transition-all duration-300 ease-out" 
+                  style={{ width: `${Math.min(progress, 100)}%` }}
+                />
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+              Suportamos arquivos .xls e .xlsx. A planilha deve conter as colunas: Material, Especificação, Unidade, Quantidade, Pr. Unitário, Estq.Mínimo.
+            </p>
+          )}
           <input 
             type="file" 
             ref={fileInputRef} 

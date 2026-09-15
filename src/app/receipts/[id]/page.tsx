@@ -75,11 +75,11 @@ export default async function ReceiptDetailsPage({ params }: { params: Promise<{
       )}
 
       {isCompleted && (
-        <div className="bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-950 dark:text-emerald-100 p-4 rounded-lg border border-emerald-300 dark:border-emerald-800 flex gap-3">
-          <CheckCircleIcon className="h-5 w-5 shrink-0 text-emerald-700 dark:text-emerald-400" />
+        <div className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-900 dark:text-emerald-100 p-4 rounded-lg border border-emerald-200 dark:border-emerald-800 flex gap-3">
+          <CheckCircleIcon className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-500 mt-0.5" />
           <div>
-            <h4 className="font-bold text-emerald-900 dark:text-emerald-200">Entrada Recebida</h4>
-            <p className="text-sm mt-1 font-medium text-emerald-800 dark:text-emerald-300">Os itens desta entrada já foram processados e o estoque foi devidamente atualizado. Esta ação não pode ser desfeita ou repetida (idempotência).</p>
+            <h4 className="font-bold text-emerald-900 dark:text-emerald-100">Entrada Recebida</h4>
+            <p className="text-sm mt-1 text-emerald-800 dark:text-emerald-200/90">Os itens desta entrada já foram processados e o estoque foi devidamente atualizado. Esta ação não pode ser desfeita ou repetida (idempotência).</p>
           </div>
         </div>
       )}

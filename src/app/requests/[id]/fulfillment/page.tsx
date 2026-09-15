@@ -2,7 +2,7 @@ import { db } from "@/lib/db"
 import { notFound } from "next/navigation"
 import FulfillmentForm from "./fulfillment-form"
 
-export default async function FulfillmentPage({ params }: { params: { id: string } }) {
+export default async function FulfillmentPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const req = await db.materialRequest.findUnique({

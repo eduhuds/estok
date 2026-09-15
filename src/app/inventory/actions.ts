@@ -53,3 +53,10 @@ export async function finishInventoryAction(inventoryId: string, userId: string)
   revalidatePath(`/inventory/${inventoryId}`)
   revalidatePath("/inventory")
 }
+
+export async function deleteInventoryAction(formData: FormData) {
+  const inventoryId = formData.get("id") as string
+  await db.inventory.delete({ where: { id: inventoryId } })
+  revalidatePath("/inventory")
+  redirect("/inventory")
+}

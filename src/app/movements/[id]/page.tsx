@@ -7,7 +7,7 @@ import {  Clock, ArrowRight, User, Package, FileText, Link as LinkIcon } from "l
 import Link from "next/link"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function MovementDetailPage({ params }: { params: { id: string } }) {
+export default async function MovementDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   
   const mov = await db.stockMovement.findUnique({

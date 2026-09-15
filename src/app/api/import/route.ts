@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { revalidatePath } from 'next/cache'
 
 const prisma = new PrismaClient()
 
@@ -75,7 +76,11 @@ export async function POST(request: Request) {
       const name = String(row['Especificação'])
       const unitCode = String(row['Unidade']).toUpperCase() || 'UN'
       const quantity = Number(row['Quantidade']) || 0
-      const averageCost = Number(row['Pr. Unitário']) || 0
+      const statedCost = Number(row['Pr. Unitário']) || 0
+      const totalValue = Number(row['Valor']) || 0
+      
+      // Calculate exact averageCost to avoid rounding divergence from 'Pr. Unitário'
+      const averageCost = (quantity > 0 && totalValue > 0) ? (totalValue / quantity) : statedCost
       const minimumStock = Number(row['Estq.Mínimo']) || 0
 
       if (!code || code === 'undefined' || !name || name === 'undefined') {
@@ -162,10 +167,15 @@ export async function POST(request: Request) {
             performedById: adminUser.id
           }
         })
+
       }
 
       processedCount++
     }
+    
+    try {
+      revalidatePath('/products')
+    } catch(e) {}
 
     return NextResponse.json({ success: true, processedCount })
 

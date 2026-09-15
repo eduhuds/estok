@@ -6,8 +6,10 @@ import { Select } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import {  Save, Plus, PackageX } from "lucide-react"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { createReturnAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
+import { ReturnItemsForm } from "./return-items-form"
 
 export default async function NewReturnPage() {
   const warehouses = await db.warehouse.findMany({ 
@@ -79,55 +81,7 @@ export default async function NewReturnPage() {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium border-b pb-2 flex items-center justify-between">
-                Itens a Devolver
-                <Button type="button" variant="outline" size="sm" className="h-8 gap-1">
-                  <Plus className="h-4 w-4" /> Adicionar Item
-                </Button>
-              </h3>
-              
-              {/* Mock de 1 item fixo para simplificar a UI sem muito JS client-side */}
-              <div className="border rounded-lg p-4 bg-muted flex items-start gap-4">
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-3">
-                  <div className="col-span-2 space-y-2">
-                    <label className="text-xs font-medium">Produto</label>
-                    <Select name="productId" required>
-                      <option value="">Selecione...</option>
-                      {products.map(p => (
-                        <option key={p.id} value={p.id}>{p.code} - {p.name}</option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-medium">Qtd</label>
-                    <Input type="number" name="quantity" defaultValue={1} min={1} required />
-                  </div>
-                  <div className="col-span-2 space-y-2">
-                    <label className="text-xs font-medium">Condição</label>
-                    <Select name="condition" defaultValue="GOOD">
-                      <option value="GOOD">Bom Estado (Retorna p/ Estoque)</option>
-                      <option value="DAMAGED">Danificado (Fica segregado)</option>
-                      <option value="UNUSABLE">Inutilizável (Descarte)</option>
-                    </Select>
-                  </div>
-                  <div className="col-span-5 space-y-2">
-                    <label className="text-xs font-medium">Localização no Almoxarifado</label>
-                    <Select name="locationId" required>
-                      <option value="">Selecione o local de guarda...</option>
-                      {warehouses.flatMap(w => w.locations).map(l => (
-                        <option key={l.id} value={l.id}>{l.code}</option>
-                      ))}
-                    </Select>
-                  </div>
-                  <input type="hidden" name="unitId" value={products[0]?.unitId || ''} />
-                </div>
-                <Button type="button" variant="ghost" className="text-red-500 hover:text-red-700 hover:bg-red-50 mt-6">
-                  <PackageX className="h-5 w-5" />
-                </Button>
-              </div>
-
-            </div>
+            <ReturnItemsForm products={products} warehouses={warehouses} />
 
             <div className="flex justify-end gap-3 pt-6 border-t">
               <Link href="/returns">

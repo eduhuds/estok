@@ -201,6 +201,22 @@ export async function consolidateInventory(inventoryId: string, userId: string) 
       }
     }
 
+    // Also include all items currently in stock for the inventoried locations
+    // so that uncounted items appear as missing (shortage)
+    const locationIds = inv.locations.map(l => l.locationId)
+    const systemStocks = await tx.stock.findMany({
+      where: { locationId: { in: locationIds } }
+    })
+    
+    for (const sys of systemStocks) {
+      const key = `${sys.locationId}_${sys.productId}`
+      if (!countedMap.has(key)) {
+        countedMap.set(key, 0)
+      }
+    }
+
+    let hasDivergences = false
+
     for (const [key, countedQty] of countedMap.entries()) {
       const [locId, prodId] = key.split('_')
       
@@ -214,6 +230,7 @@ export async function consolidateInventory(inventoryId: string, userId: string) 
       const diff = countedQty - sysQty
 
       if (diff !== 0) {
+        hasDivergences = true
         await tx.inventoryDivergence.create({
           data: {
             inventoryId,
@@ -231,7 +248,7 @@ export async function consolidateInventory(inventoryId: string, userId: string) 
     await tx.inventory.update({
       where: { id: inventoryId },
       data: {
-        status: 'CONFERENCE',
+        status: hasDivergences ? 'CONFERENCE' : 'COMPLETED',
         finishedAt: new Date(),
         finishedById: userId
       }

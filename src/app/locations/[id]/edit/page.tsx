@@ -9,13 +9,13 @@ import { redirect } from "next/navigation"
 import { updateLocationAction } from "../../actions"
 import { BackButton } from "@/components/ui/back-button"
 
-export default async function EditLocationPage({
-  params,
-  searchParams
-}: {
-  params: { id: string }
-  searchParams: { error?: string }
+export default async function EditLocationPage(props: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ error?: string }>
 }) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const location = await db.warehouseLocation.findUnique({
     where: { id: params.id }
   })

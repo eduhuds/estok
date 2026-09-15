@@ -1,6 +1,6 @@
 import { requirePermissionPage } from "@/lib/permissions"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Shield, MapPin, Tags, Settings, Activity, ShieldCheck, Database, PackageOpen } from "lucide-react"
+import { Users, Shield, MapPin, Tags, Settings, Activity, ShieldCheck, Database, PackageOpen, Truck } from "lucide-react"
 import Link from "next/link"
 
 export default async function AdminHubPage() {
@@ -19,6 +19,7 @@ export default async function AdminHubPage() {
       group: "Cadastros Base",
       items: [
         { name: "Almoxarifados", href: "/admin/warehouses", icon: PackageOpen, description: "Unidades e galpões" },
+        { name: "Fornecedores", href: "/admin/suppliers", icon: Truck, description: "Empresas parceiras" },
         { name: "Localizações", href: "/admin/locations", icon: MapPin, description: "Corredores, estantes e prateleiras" },
         { name: "Categorias", href: "/admin/categories", icon: Tags, description: "Famílias de produtos" },
       ]

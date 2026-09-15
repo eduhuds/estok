@@ -6,11 +6,12 @@ import Link from "next/link"
 import { createUnitAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
 
-export default function NewUnitPage({
+export default async function NewUnitPage({
   searchParams,
 }: {
-  searchParams: { error?: string }
+  searchParams: Promise<{ error?: string }>
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <div className="space-y-6 max-w-2xl">
       <div className="flex items-center gap-4">
@@ -23,9 +24,9 @@ export default function NewUnitPage({
 
       <Card>
         <CardContent className="p-6 space-y-6">
-          {searchParams.error && (
+          {resolvedSearchParams.error && (
             <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-              {searchParams.error}
+              {resolvedSearchParams.error}
             </div>
           )}
 

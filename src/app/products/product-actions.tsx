@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Pencil, QrCode, Printer } from "lucide-react"
+import { MoreHorizontal, Pencil, QrCode, Printer, Trash2 } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { QRCodeSVG } from "qrcode.react"
@@ -85,7 +85,7 @@ export function ProductActions({ productId, productCode, productName }: { produc
 
       {isOpen && (
         <div className="absolute right-0 top-10 z-50 w-44 rounded-xl border border-border/50 bg-card/95 backdrop-blur-md p-1.5 shadow-lg animate-in fade-in zoom-in-95 duration-200">
-          <Link href={`/products/${productId}`}>
+          <Link href={`/products/${productId}/edit`}>
             <button className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-foreground hover:bg-muted transition-colors">
               <Pencil className="h-4 w-4 text-muted-foreground" />
               Editar
@@ -100,6 +100,19 @@ export function ProductActions({ productId, productCode, productName }: { produc
           >
             <QrCode className="h-4 w-4 text-indigo-500" />
             Etiqueta (QR Code)
+          </button>
+          <button 
+            onClick={async () => {
+              if (window.confirm('Tem certeza que deseja excluir este produto?')) {
+                const { deleteProduct } = await import('./actions')
+                await deleteProduct(productId)
+                window.location.reload()
+              }
+            }}
+            className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors mt-1"
+          >
+            <Trash2 className="h-4 w-4 text-red-600" />
+            Excluir
           </button>
         </div>
       )}
