@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react"
 
-export function DeleteInventoryButton({ deleteAction, invId }: { deleteAction: () => void, invId: string }) {
+export function DeleteInventoryButton({ deleteAction, invId }: { deleteAction: (formData: FormData) => void, invId: string }) {
   return (
     <form action={deleteAction} onSubmit={(e) => {
       if(!confirm('Tem certeza que deseja excluir este inventário?')) e.preventDefault()
