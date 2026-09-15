@@ -45,8 +45,17 @@ export function Topbar({ user }: { user?: { name: string; email: string; roles: 
   }
 
   const segments = pathname.split('/').filter(Boolean)
-  const lastSegment = segments[segments.length - 1] || 'dashboard'
-  const mappedTitle = titleMap[lastSegment] || lastSegment.replace('-', ' ')
+  let lastSegment = segments[segments.length - 1] || 'dashboard'
+  
+  // Se o último segmento não estiver mapeado (ex: um ID/UUID), procuramos o último segmento válido
+  if (!titleMap[lastSegment] && segments.length > 1) {
+    const validSegment = [...segments].reverse().find(seg => titleMap[seg])
+    if (validSegment) {
+      lastSegment = validSegment
+    }
+  }
+
+  const mappedTitle = titleMap[lastSegment] || lastSegment.replace(/-/g, ' ')
   const titleFormatted = mappedTitle.charAt(0).toUpperCase() + mappedTitle.slice(1)
 
   return (
