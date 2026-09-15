@@ -60,3 +60,16 @@ export async function deleteInventoryAction(formData: FormData) {
   revalidatePath("/inventory")
   redirect("/inventory")
 }
+
+export async function concludeInventoryAction(formData: FormData) {
+  const inventoryId = formData.get("id") as string
+  await db.inventory.update({
+    where: { id: inventoryId },
+    data: { status: 'COMPLETED' }
+  })
+  
+  revalidatePath(`/inventory/${inventoryId}`)
+  revalidatePath(`/inventory/${inventoryId}/divergences`)
+  revalidatePath("/inventory")
+  redirect(`/inventory/${inventoryId}`)
+}

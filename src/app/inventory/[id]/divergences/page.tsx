@@ -7,6 +7,7 @@ import {  CheckCircle2, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { BackButton } from "@/components/ui/back-button"
+import { concludeInventoryAction } from "../../actions"
 
 export default async function DivergencesPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -31,12 +32,23 @@ export default async function DivergencesPage({ params }: { params: Promise<{ id
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <BackButton />
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Divergências Encontradas</h2>
-          <p className="text-muted-foreground">Resultado da conferência entre sistema e contagem física.</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <BackButton />
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Divergências Encontradas</h2>
+            <p className="text-muted-foreground">Resultado da conferência entre sistema e contagem física.</p>
+          </div>
         </div>
+        {inv.status !== 'COMPLETED' && (
+          <form action={concludeInventoryAction}>
+            <input type="hidden" name="id" value={inv.id} />
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4" />
+              Concluir Inventário
+            </Button>
+          </form>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
