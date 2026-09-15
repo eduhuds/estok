@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
+import { SearchableSelect } from "@/components/ui/searchable-select"
 import { Card, CardContent } from "@/components/ui/card"
 import {  Save, Plus, Trash2, CheckCircle } from "lucide-react"
 import Link from "next/link"
@@ -116,17 +117,16 @@ export default function ReceiptForm({ suppliers, warehouses, products, locations
                   <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-muted">
                     <div className="col-span-12 md:col-span-4 space-y-1">
                       <label className="text-xs font-medium text-muted-foreground">Produto *</label>
-                      <Select 
+                      <SearchableSelect 
                         name="item_productId" 
                         required 
                         value={item.productId}
-                        onChange={e => updateItem(item.id, "productId", e.target.value)}
-                      >
-                        <option value="">Selecionar...</option>
-                        {products.map((p: any) => (
-                          <option key={p.id} value={p.id}>{p.code} - {p.name}</option>
-                        ))}
-                      </Select>
+                        onChange={val => updateItem(item.id, "productId", val)}
+                        options={products.map((p: any) => ({
+                          value: p.id,
+                          label: `${p.code} - ${p.name}`
+                        }))}
+                      />
                     </div>
                     
                     <div className="col-span-6 md:col-span-2 space-y-1">
