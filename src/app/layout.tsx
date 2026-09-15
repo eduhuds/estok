@@ -29,6 +29,8 @@ export const viewport = {
   themeColor: "#4f46e5",
 };
 
+import { Toaster } from "sonner"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,6 +46,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AppShell>{children}</AppShell>
+          <Toaster richColors position="top-right" />
         </ThemeProvider>
       </body>
     </html>

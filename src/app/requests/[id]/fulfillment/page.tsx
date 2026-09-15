@@ -31,9 +31,13 @@ export default async function FulfillmentPage({ params }: { params: Promise<{ id
   const userAlmox = await db.user.findFirst({ where: { roles: { some: { name: 'ALMOXARIFE' } } } })
   const mockUserId = userAlmox?.id || ""
 
+  // Serializa o objeto para remover instâncias de classes (como Decimal do Prisma)
+  // que não podem ser passadas para Client Components.
+  const serializedReq = JSON.parse(JSON.stringify(req))
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <FulfillmentForm request={req} userId={mockUserId} />
+      <FulfillmentForm request={serializedReq} userId={mockUserId} />
     </div>
   )
 }

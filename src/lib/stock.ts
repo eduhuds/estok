@@ -228,41 +228,42 @@ export async function consolidateInventory(inventoryId: string, userId: string) 
       where: { locationId: { in: locationIds } }
     })
     
+    const systemStockMap = new Map<string, number>()
     for (const sys of systemStocks) {
       const key = `${sys.locationId}_${sys.productId}`
+      systemStockMap.set(key, sys.quantity)
       if (!countedMap.has(key)) {
         countedMap.set(key, 0)
       }
     }
 
     let hasDivergences = false
+    const divergencesData = []
 
     for (const [key, countedQty] of countedMap.entries()) {
       const [locId, prodId] = key.split('_')
       
-      const systemStock = await tx.stock.findUnique({
-        where: {
-          productId_locationId: { productId: prodId, locationId: locId }
-        }
-      })
-
-      const sysQty = systemStock?.quantity || 0
+      const sysQty = systemStockMap.get(key) || 0
       const diff = countedQty - sysQty
 
       if (diff !== 0) {
         hasDivergences = true
-        await tx.inventoryDivergence.create({
-          data: {
-            inventoryId,
-            locationId: locId,
-            productId: prodId,
-            systemQuantity: sysQty,
-            countedQuantity: countedQty,
-            difference: diff,
-            status: 'PENDING'
-          }
+        divergencesData.push({
+          inventoryId,
+          locationId: locId,
+          productId: prodId,
+          systemQuantity: sysQty,
+          countedQuantity: countedQty,
+          difference: diff,
+          status: 'PENDING'
         })
       }
+    }
+
+    if (divergencesData.length > 0) {
+      await tx.inventoryDivergence.createMany({
+        data: divergencesData
+      })
     }
 
     await tx.inventory.update({
@@ -273,6 +274,8 @@ export async function consolidateInventory(inventoryId: string, userId: string) 
         finishedById: userId
       }
     })
+  }, {
+    timeout: 30000 // 30 seconds timeout for large inventories
   })
 }
 

@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
-import {  Save, Plus, Trash2, Send } from "lucide-react"
+import { Save, Plus, Trash2, Send } from "lucide-react"
 import Link from "next/link"
 import { createRequestAction } from "../actions"
 import { BackButton } from "@/components/ui/back-button"
+import { SearchableSelect } from "@/components/ui/searchable-select"
+import { handleAction } from "@/lib/handle-action"
 
 type RequestItemData = {
   id: string
@@ -56,7 +58,7 @@ export default function RequestForm({ users, warehouses, products }: any) {
 
       <Card>
         <CardContent className="p-6">
-          <form action={createRequestAction} className="space-y-8">
+          <form action={handleAction(createRequestAction)} className="space-y-8">
             {/* Cabeçalho */}
             <div className="space-y-4">
               <h3 className="text-lg font-medium border-b pb-2">Dados da Requisição</h3>
@@ -115,17 +117,17 @@ export default function RequestForm({ users, warehouses, products }: any) {
                   <div key={item.id} className="grid grid-cols-12 gap-3 items-end border p-4 rounded-md bg-muted">
                     <div className="col-span-12 md:col-span-6 space-y-1">
                       <label className="text-xs font-medium text-muted-foreground">Produto *</label>
-                      <Select 
+                      <SearchableSelect 
                         name={`item_productId_${item.id}`}
                         required 
                         value={item.productId}
-                        onChange={e => updateItem(item.id, "productId", e.target.value)}
-                      >
-                        <option value="">Selecionar...</option>
-                        {products.map((p: any) => (
-                          <option key={p.id} value={p.id}>{p.code} - {p.name}</option>
-                        ))}
-                      </Select>
+                        onChange={value => updateItem(item.id, "productId", value)}
+                        options={products.map((p: any) => ({
+                          value: p.id,
+                          label: `${p.code} - ${p.name}`
+                        }))}
+                        placeholder="Selecionar..."
+                      />
                     </div>
                     
                     <div className="col-span-8 md:col-span-4 space-y-1">

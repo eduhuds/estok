@@ -9,6 +9,7 @@ import {  CheckCircle } from "lucide-react"
 import Link from "next/link"
 import { fulfillRequestAction } from "../../actions"
 import { BackButton } from "@/components/ui/back-button"
+import { handleAction } from "@/lib/handle-action"
 
 export default function FulfillmentForm({ request, userId }: any) {
   const hasPendingItems = request.items.some((item: any) => (item.approvedQuantity - item.deliveredQuantity) > 0)
@@ -38,7 +39,31 @@ export default function FulfillmentForm({ request, userId }: any) {
 
       <Card>
         <CardContent className="p-6">
-          <form action={fulfillRequestAction} className="space-y-8">
+          <form 
+            action={handleAction(fulfillRequestAction)} 
+            className="space-y-8"
+            onSubmit={(e) => {
+              const formData = new FormData(e.currentTarget)
+              let hasValidItem = false
+              
+              for (const key of Array.from(formData.keys())) {
+                if (key.startsWith('delivery_quantity_')) {
+                  const suffix = key.replace('delivery_quantity_', '')
+                  const qty = Number(formData.get(key))
+                  const loc = formData.get(`delivery_location_${suffix}`)
+                  if (qty > 0 && loc) {
+                    hasValidItem = true
+                    break
+                  }
+                }
+              }
+
+              if (!hasValidItem) {
+                e.preventDefault()
+                alert("Por favor, preencha a quantidade e selecione o local de retirada de pelo menos um item.")
+              }
+            }}
+          >
             <input type="hidden" name="requestId" value={request.id} />
             <input type="hidden" name="userId" value={userId} />
 
