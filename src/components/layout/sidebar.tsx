@@ -23,67 +23,76 @@ import {
   HelpCircle
 } from "lucide-react"
 
-const menuGroups = [
-  {
-    title: "Menu Inicial",
-    items: [
-      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    ]
-  },
-  {
-    title: "Estoque",
-    items: [
-      { name: "Produtos", href: "/products", icon: Package },
-      { name: "Categorias", href: "/categories", icon: Tags },
-      { name: "Unidades", href: "/units", icon: Package },
-      { name: "Localizações", href: "/locations", icon: MapPin },
-      { name: "Movimentações", href: "/movements", icon: ArrowRightLeft },
-    ]
-  },
-  {
-    title: "Operações",
-    items: [
-      { name: "Entradas", href: "/receipts", icon: ArrowDownToLine },
-      { name: "Saídas", href: "/issues", icon: ArrowUpFromLine },
-      { name: "Requisições", href: "/requests", icon: ClipboardList },
-      { name: "Devoluções", href: "/returns", icon: RotateCcw },
-    ]
-  },
-  {
-    title: "Inventário",
-    items: [
-      { name: "Inventários", href: "/inventory", icon: ClipboardList },
-      { name: "Coletor (Scanner)", href: "/collector", icon: CheckSquare },
-    ]
-  },
-  {
-    title: "Integração",
-    items: [
-      { name: "Importar", href: "/import", icon: FolderSync },
-      { name: "Exportar", href: "/export", icon: FolderSync },
-    ]
-  },
-  {
-    title: "Sistema",
-    items: [
-      { name: "Relatórios", href: "/reports", icon: BarChart3 },
-      { name: "API / Conectores", href: "/api", icon: Settings },
-      { name: "Central de Ajuda", href: "/help", icon: HelpCircle },
-    ]
-  },
-  {
-    title: "Administração",
-    items: [
-      { name: "Gestão Central", href: "/admin", icon: Shield },
-      { name: "Usuários", href: "/admin/users", icon: Users },
-      { name: "Configurações", href: "/admin/settings", icon: Settings },
-    ]
-  },
-]
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Sidebar({ user }: { user?: { name: string; email: string; roles: string[] } | null }) {
   const pathname = usePathname()
+
+  const isRequesterOnly = user?.roles && 
+    user.roles.includes('SOLICITANTE') && 
+    !user.roles.some(r => ['ADMIN', 'GESTOR', 'ALMOXARIFE'].includes(r))
+
+  const menuGroups = [
+    {
+      title: "Menu Inicial",
+      items: [
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      ]
+    },
+    ...(!isRequesterOnly ? [{
+      title: "Estoque",
+      items: [
+        { name: "Produtos", href: "/products", icon: Package },
+        { name: "Categorias", href: "/categories", icon: Tags },
+        { name: "Unidades", href: "/units", icon: Package },
+        { name: "Localizações", href: "/locations", icon: MapPin },
+        { name: "Movimentações", href: "/movements", icon: ArrowRightLeft },
+      ]
+    }] : []),
+    {
+      title: "Operações",
+      items: [
+        ...(!isRequesterOnly ? [
+          { name: "Entradas", href: "/receipts", icon: ArrowDownToLine },
+          { name: "Saídas", href: "/issues", icon: ArrowUpFromLine },
+          { name: "Entrega Rápida", href: "/quick-issue", icon: Shield },
+        ] : []),
+        { name: "Requisições", href: "/requests", icon: ClipboardList },
+        ...(!isRequesterOnly ? [
+          { name: "Devoluções", href: "/returns", icon: RotateCcw },
+        ] : []),
+      ]
+    },
+    ...(!isRequesterOnly ? [{
+      title: "Inventário",
+      items: [
+        { name: "Inventários", href: "/inventory", icon: ClipboardList },
+        { name: "Coletor (Scanner)", href: "/collector", icon: CheckSquare },
+      ]
+    }] : []),
+    ...(!isRequesterOnly ? [{
+      title: "Integração",
+      items: [
+        { name: "Importar", href: "/import", icon: FolderSync },
+        { name: "Exportar", href: "/export", icon: FolderSync },
+      ]
+    }] : []),
+    ...(!isRequesterOnly ? [{
+      title: "Sistema",
+      items: [
+        { name: "Relatórios", href: "/reports", icon: BarChart3 },
+        { name: "API / Conectores", href: "/api", icon: Settings },
+        { name: "Central de Ajuda", href: "/help", icon: HelpCircle },
+      ]
+    }] : []),
+    ...(!isRequesterOnly ? [{
+      title: "Administração",
+      items: [
+        { name: "Gestão Central", href: "/admin", icon: Shield },
+        { name: "Usuários", href: "/admin/users", icon: Users },
+        { name: "Configurações", href: "/admin/settings", icon: Settings },
+      ]
+    }] : []),
+  ]
 
   return (
     <aside className="flex h-full w-full flex-col border-r border-slate-200 bg-[#F8F9FA]">
@@ -92,7 +101,7 @@ export function Sidebar({ user }: { user?: { name: string; email: string; roles:
           <div className="bg-indigo-100 p-1.5 rounded-lg text-indigo-600">
             <Package className="h-5 w-5" />
           </div>
-          ESTOK
+          CGSTOCK
         </div>
       </div>
       

@@ -4,7 +4,7 @@ import { HelpContent } from "./help-content"
 import { BookOpen } from "lucide-react"
 
 export const metadata = {
-  title: "Central de Ajuda | Estok",
+  title: "Central de Ajuda | CGStock",
   description: "Manual completo e documentação do sistema",
 }
 
@@ -21,7 +21,7 @@ export default async function HelpPage() {
             Central de Ajuda e Documentação
           </h2>
           <p className="text-muted-foreground mt-2 text-lg">
-            Guia completo de operação, boas práticas e fluxos do sistema Estok.
+            Guia completo de operação, boas práticas e fluxos do sistema CGStock.
           </p>
         </div>
       </div>

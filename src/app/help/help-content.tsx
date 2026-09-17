@@ -85,7 +85,7 @@ export function HelpContent() {
         <section id="intro" className="scroll-mt-24 space-y-4">
           <h2 className="text-3xl font-bold border-b pb-2">Visão Geral</h2>
           <p className="text-foreground leading-relaxed text-lg">
-            Bem-vindo ao <strong>Estok</strong>, seu sistema profissional de Gestão de Almoxarifado.
+            Bem-vindo ao <strong>CGStock</strong>, seu sistema profissional de Gestão de Almoxarifado.
             Ele foi desenvolvido com o conceito de <em>Imutabilidade Operacional</em>, o que significa que
             toda alteração no estoque gera um rastro inalterável, garantindo auditoria completa e zero fraudes.
           </p>
@@ -378,7 +378,7 @@ export function HelpContent() {
             <div className="border border-border/50 rounded-xl p-4 bg-card">
               <h4 className="font-bold">1. O saldo de um produto está errado no sistema. Como corrigir?</h4>
               <p className="text-sm text-muted-foreground mt-2">
-                Como o Estok trabalha com Imutabilidade Operacional, você não pode "editar" o saldo de um produto. Se houver uma diferença física, você deve ir em <strong>Inventário</strong> e criar um Ajuste (Entrada ou Saída por Ajuste) para justificar a sobra ou perda. Isso mantém o rastro de auditoria perfeito.
+                Como o CGStock trabalha com Imutabilidade Operacional, você não pode "editar" o saldo de um produto. Se houver uma diferença física, você deve ir em <strong>Inventário</strong> e criar um Ajuste (Entrada ou Saída por Ajuste) para justificar a sobra ou perda. Isso mantém o rastro de auditoria perfeito.
               </p>
             </div>
             

@@ -44,11 +44,11 @@ export default function LoginPage() {
         </div>
 
         {/* Header Branding */}
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-600/30">
-            <Package className="h-7 w-7 text-white" />
+        <div className="flex items-center gap-2">
+          <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">
+            <Package className="h-6 w-6 text-white" />
           </div>
-          <span className="text-2xl font-black tracking-tight text-white">ESTOK</span>
+          <span className="text-2xl font-black tracking-tight text-white">CGSTOCK</span>
         </div>
 
         {/* Hero Text */}
@@ -89,20 +89,20 @@ export default function LoginPage() {
         </div>
 
         {/* Footer info */}
-        <div className="relative z-10 text-sm text-slate-500 font-medium">
-          &copy; {new Date().getFullYear()} Estok Systems. Todos os direitos reservados.
-        </div>
+        <div className="absolute bottom-8 left-12 z-20 text-indigo-200/60 text-sm">
+        &copy; {new Date().getFullYear()} CGStock Systems. Todos os direitos reservados.
+      </div>
       </div>
 
       {/* Lado Direito - Form Login */}
       <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 bg-background relative z-10">
         
         {/* Mobile Logo Only */}
-        <div className="md:hidden flex items-center gap-3 mb-10">
-          <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg shadow-indigo-600/30">
-            <Package className="h-7 w-7 text-white" />
+        <div className="flex items-center gap-2 mb-8 md:hidden justify-center">
+          <div className="bg-indigo-100 p-2 rounded-xl">
+            <Package className="h-6 w-6 text-indigo-600" />
           </div>
-          <span className="text-2xl font-black tracking-tight text-foreground">ESTOK</span>
+          <span className="text-2xl font-black tracking-tight text-foreground">CGSTOCK</span>
         </div>
 
         <div className="w-full max-w-[400px] space-y-8">

@@ -26,7 +26,7 @@ export default async function SettingsPage() {
             <Settings2 className="h-6 w-6 text-indigo-600" />
             Configurações do Sistema
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">Gerencie os parâmetros globais de funcionamento do Estok.</p>
+          <p className="text-muted-foreground text-sm mt-1">Gerencie os parâmetros globais de funcionamento do CGStock.</p>
         </div>
         </div>
         <Button type="submit" className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export default async function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>Nome do Sistema</Label>
-              <Input name="SYSTEM_NAME" defaultValue={getVal("SYSTEM_NAME") || "Estok"} />
+              <Input name="SYSTEM_NAME" defaultValue={getVal("SYSTEM_NAME") || "CGStock"} />
             </div>
             <div className="space-y-2">
               <Label>Nome da Empresa</Label>

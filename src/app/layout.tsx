@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Estok - Gestão de Almoxarifado",
+  title: "CGStock - Gestão de Almoxarifado",
   description: "Sistema profissional de gestão de almoxarifado e inventário",
   manifest: "/manifest.json",
   appleWebApp: {

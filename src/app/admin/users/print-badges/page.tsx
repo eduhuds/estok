@@ -6,7 +6,7 @@ import Link from "next/link";
 import PrintButton from "./print-button";
 
 export const metadata = {
-  title: "Imprimir Crachás QR Code - Estok",
+  title: "Imprimir Crachás QR Code - CGStock",
 };
 
 export default async function PrintBadgesPage({

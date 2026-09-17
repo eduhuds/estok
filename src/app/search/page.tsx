@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { SearchResults } from "./search-results"
 
 export const metadata = {
-  title: "Busca | Estok",
+  title: "Busca | CGStock",
 }
 
 export default async function SearchPage({

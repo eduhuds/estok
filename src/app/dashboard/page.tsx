@@ -4,8 +4,117 @@ import { Badge } from "@/components/ui/badge"
 import { db } from "@/lib/db"
 import Link from "next/link"
 import { DashboardCharts } from "./charts"
+import { getSession } from "@/lib/auth"
+import { QRCodeBadge } from "@/components/ui/qr-code-badge"
+import { Button } from "@/components/ui/button"
+import { QrCode, ClipboardList, Clock, CheckCircle2 } from "lucide-react"
+
+async function RequesterDashboard({ user, qrToken }: { user: any, qrToken: string | null }) {
+  const recentRequests = await db.materialRequest.findMany({
+    where: { requesterId: user.userId },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+    include: {
+      _count: { select: { items: true } }
+    }
+  })
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-8 p-4">
+      <div className="text-center space-y-4 mb-8">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+          Olá, {user.name.split(' ')[0]}!
+        </h1>
+        <p className="text-muted-foreground font-medium">
+          Bem-vindo ao seu painel. Mostre o QR Code abaixo ao almoxarife para retiradas rápidas.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* QR Code Card */}
+        <Card className="border-indigo-500/20 shadow-lg shadow-indigo-500/5 bg-gradient-to-br from-indigo-50/50 to-white dark:from-indigo-950/20 dark:to-zinc-950">
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-lg flex justify-center items-center gap-2">
+              <QrCode className="h-5 w-5 text-indigo-600" />
+              Seu Crachá Digital
+            </CardTitle>
+            <CardDescription>Para uso na Entrega Rápida</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center p-6">
+            {qrToken ? (
+              <QRCodeBadge 
+                userId={user.userId} 
+                userName={user.name} 
+                qrToken={qrToken} 
+                className="scale-110 shadow-xl border-none" 
+              />
+            ) : (
+              <div className="text-center p-6 bg-muted/50 rounded-xl border border-dashed">
+                <p className="text-sm text-muted-foreground">Você ainda não possui um QR Code de retirada.</p>
+                <p className="text-xs text-muted-foreground mt-2">Solicite ao gestor.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Requests Card */}
+        <div className="space-y-4">
+          <Card className="h-full shadow-sm">
+            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b">
+              <div>
+                <CardTitle className="text-lg">Minhas Requisições</CardTitle>
+                <CardDescription>Acompanhe seus pedidos</CardDescription>
+              </div>
+              <Link href="/requests/new">
+                <Button size="sm" className="bg-indigo-600 hover:bg-indigo-700">Nova Requisição</Button>
+              </Link>
+            </CardHeader>
+            <CardContent className="p-0">
+              {recentRequests.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground">
+                  Nenhuma requisição recente.
+                </div>
+              ) : (
+                <div className="divide-y">
+                  {recentRequests.map(req => (
+                    <div key={req.id} className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors">
+                      <div className="space-y-1">
+                        <Link href={`/requests/${req.id}`} className="font-bold hover:text-indigo-600 transition-colors">
+                          {req.requestNumber}
+                        </Link>
+                        <div className="flex items-center text-xs text-muted-foreground gap-2">
+                          <span className="flex items-center"><ClipboardList className="h-3 w-3 mr-1"/> {req._count.items} itens</span>
+                          <span>•</span>
+                          <span>{new Date(req.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <Badge variant={req.status === 'FULFILLED' ? 'default' : req.status === 'DRAFT' ? 'outline' : 'secondary'}
+                        className={req.status === 'FULFILLED' ? 'bg-emerald-500' : req.status === 'PENDING_APPROVAL' ? 'bg-amber-500' : ''}>
+                        {req.status === 'PENDING_APPROVAL' ? 'Aguardando' : req.status === 'FULFILLED' ? 'Atendida' : req.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default async function DashboardPage() {
+  const session = await getSession()
+  const roles = session?.roles || []
+  
+  const isRequesterOnly = roles.includes('SOLICITANTE') && !roles.some(r => ['ADMIN', 'GESTOR', 'ALMOXARIFE'].includes(r))
+  
+  if (isRequesterOnly && session) {
+    const user = await db.user.findUnique({ where: { id: session.userId }, select: { qrToken: true } })
+    return <RequesterDashboard user={session} qrToken={user?.qrToken || null} />
+  }
+
   const totalProducts = await db.product.count()
 
   const pendingDivergencesCount = await db.inventoryDivergence.count({

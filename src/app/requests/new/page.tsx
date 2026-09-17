@@ -12,9 +12,9 @@ export default async function NewRequestPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <RequestForm 
-        users={users} 
-        warehouses={warehouses} 
-        products={products} 
+        users={JSON.parse(JSON.stringify(users))} 
+        warehouses={JSON.parse(JSON.stringify(warehouses))} 
+        products={JSON.parse(JSON.stringify(products))} 
       />
     </div>
   )
