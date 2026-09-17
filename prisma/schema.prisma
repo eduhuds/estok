@@ -17,6 +17,7 @@ model User {
   status               String                @default("ACTIVE") // ACTIVE, INACTIVE
   
   movementsPerformed   StockMovement[]
+  movementsReceived    StockMovement[]       @relation("MovementRecipient")
   receiptsCreated      StockReceipt[]
   
   requestsCreated      MaterialRequest[]     @relation("RequestRequester")
@@ -40,6 +41,12 @@ model User {
   auditLogs            AuditLog[]            @relation("UserAuditLogs")
   notifications        Notification[]        @relation("UserNotifications")
   systemSettings       SystemSetting[]       @relation("UserSystemSettings")
+  
+  qrToken              String?               @unique
+  qrStatus             String                @default("ACTIVE") // ACTIVE, REVOKED
+  worksiteAccesses     UserWorksiteAccess[]
+  quickIssuesReceived  QuickIssue[]          @relation("IssueRecipient")
+  quickIssuesPerformed QuickIssue[]          @relation("IssueOperator")
   
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
@@ -124,6 +131,7 @@ model Product {
   inventoryDivergences InventoryDivergence[]
   returnItems          MaterialReturnItem[]
   transferItems        StockTransferItem[]
+  quickIssueItems      QuickIssueItem[]
   
   createdAt            DateTime                  @default(now())
   updatedAt            DateTime                  @updatedAt
@@ -136,6 +144,9 @@ model Warehouse {
   description          String?
   status               String              @default("ACTIVE")
   
+  worksiteId           String?
+  worksite             Worksite?           @relation(fields: [worksiteId], references: [id])
+  
   locations            WarehouseLocation[]
   stocks               Stock[]
   movements            StockMovement[]
@@ -145,6 +156,7 @@ model Warehouse {
   returns              MaterialReturn[]
   transfersSource      StockTransfer[]     @relation("TransferSourceWarehouse")
   transfersDestination StockTransfer[]     @relation("TransferDestinationWarehouse")
+  quickIssues          QuickIssue[]
   
   createdAt            DateTime            @default(now())
   updatedAt            DateTime            @updatedAt
@@ -173,6 +185,7 @@ model WarehouseLocation {
   returnItems          MaterialReturnItem[]
   transfersSource      StockTransfer[]       @relation("TransferSourceLocation")
   transfersDestination StockTransfer[]       @relation("TransferDestinationLocation")
+  quickIssueItems      QuickIssueItem[]
   
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
@@ -209,13 +222,17 @@ model StockMovement {
   quantity       Int
   unitCost       Decimal?          @db.Decimal(16, 6)
   totalCost      Decimal?          @db.Decimal(10, 2)
-  referenceType  String? // RECEIPT, INVENTORY_ADJUSTMENT, TRANSFER, MATERIAL_REQUEST, MATERIAL_RETURN
+  referenceType  String? // RECEIPT, INVENTORY_ADJUSTMENT, TRANSFER, MATERIAL_REQUEST, MATERIAL_RETURN, QUICK_ISSUE
   referenceId    String?
   documentNumber String?
   reason         String?
   notes          String?
   performedById  String
   performedBy    User              @relation(fields: [performedById], references: [id])
+  recipientUserId String?
+  recipientUser  User?             @relation("MovementRecipient", fields: [recipientUserId], references: [id])
+  worksiteId     String?
+  worksite       Worksite?         @relation(fields: [worksiteId], references: [id])
   createdAt      DateTime          @default(now())
 
   @@index([productId])
@@ -571,4 +588,77 @@ model SystemSetting {
   updatedById String
   updatedBy   User     @relation("UserSystemSettings", fields: [updatedById], references: [id])
   updatedAt   DateTime @updatedAt
+}
+
+// ==========================================
+// ETAPA 11 - ACESSO POR OBRA E ENTREGA RÁPIDA
+// ==========================================
+
+model Worksite {
+  id          String      @id @default(uuid())
+  code        String      @unique
+  name        String
+  description String?
+  status      String      @default("ACTIVE") // ACTIVE, INACTIVE
+  
+  warehouses  Warehouse[]
+  users       UserWorksiteAccess[]
+  quickIssues QuickIssue[]
+  movements   StockMovement[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model UserWorksiteAccess {
+  id                 String   @id @default(uuid())
+  userId             String
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  worksiteId         String
+  worksite           Worksite @relation(fields: [worksiteId], references: [id], onDelete: Cascade)
+  
+  canViewStock       Boolean  @default(true)
+  canRequestMaterial Boolean  @default(false)
+  canUseQuickIssue   Boolean  @default(false)
+  
+  createdAt          DateTime @default(now())
+  
+  @@unique([userId, worksiteId])
+}
+
+model QuickIssue {
+  id              String            @id @default(uuid())
+  issueNumber     String            @unique
+  
+  operatorId      String
+  operator        User              @relation("IssueOperator", fields: [operatorId], references: [id])
+  
+  recipientId     String
+  recipient       User              @relation("IssueRecipient", fields: [recipientId], references: [id])
+  
+  worksiteId      String
+  worksite        Worksite          @relation(fields: [worksiteId], references: [id])
+  
+  warehouseId     String
+  warehouse       Warehouse         @relation(fields: [warehouseId], references: [id])
+  
+  status          String            @default("DRAFT") // DRAFT, COMPLETED, CANCELLED
+  notes           String?
+  
+  items           QuickIssueItem[]
+  
+  createdAt       DateTime          @default(now())
+  completedAt     DateTime?
+}
+
+model QuickIssueItem {
+  id          String            @id @default(uuid())
+  issueId     String
+  issue       QuickIssue        @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product           @relation(fields: [productId], references: [id])
+  locationId  String
+  location    WarehouseLocation @relation(fields: [locationId], references: [id])
+  quantity    Int
+  notes       String?
 }

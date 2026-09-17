@@ -4,11 +4,14 @@ import { QRCodeSVG } from 'qrcode.react';
 interface QRCodeBadgeProps {
   userId: string;
   userName: string;
+  qrToken?: string | null;
   roleName?: string;
   className?: string;
 }
 
-export function QRCodeBadge({ userId, userName, roleName, className = '' }: QRCodeBadgeProps) {
+export function QRCodeBadge({ userId, userName, qrToken, roleName, className = '' }: QRCodeBadgeProps) {
+  const qrValue = qrToken || userId;
+
   return (
     <div className={`flex flex-col items-center justify-center p-4 border-2 border-dashed border-gray-300 rounded-xl bg-white w-48 h-64 ${className}`}>
       <div className="mb-4 text-center">
@@ -18,7 +21,7 @@ export function QRCodeBadge({ userId, userName, roleName, className = '' }: QRCo
       
       <div className="bg-white p-2 rounded-lg shadow-sm border border-slate-100">
         <QRCodeSVG 
-          value={userId}
+          value={qrValue}
           size={120}
           bgColor={"#ffffff"}
           fgColor={"#0f172a"}
@@ -27,8 +30,8 @@ export function QRCodeBadge({ userId, userName, roleName, className = '' }: QRCo
         />
       </div>
       
-      <div className="mt-4 text-[10px] text-slate-400 font-mono text-center truncate w-full px-2">
-        ID: {userId.substring(0, 8)}...
+      <div className="mt-4 text-[10px] text-slate-400 font-mono text-center truncate w-full px-2" title={qrValue}>
+        {qrValue}
       </div>
     </div>
   );

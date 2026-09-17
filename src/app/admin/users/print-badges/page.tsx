@@ -54,6 +54,7 @@ export default async function PrintBadgesPage({
               <QRCodeBadge
                 userId={user.id}
                 userName={user.name}
+                qrToken={user.qrToken}
                 roleName={user.roles[0]?.name}
               />
             </div>

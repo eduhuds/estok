@@ -1,21 +1,30 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import {} from "lucide-react"
-import Link from "next/link"
 import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { BackButton } from "@/components/ui/back-button"
+import { EditUserForm } from "./edit-user-form"
 
 export default async function EditUserPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const user = await db.user.findUnique({
     where: { id: params.id },
-    include: { roles: true }
+    include: { 
+      roles: true,
+      worksiteAccesses: true
+    }
   })
 
   if (!user) {
     redirect("/admin/users")
   }
+  
+  const roles = await db.role.findMany({
+    orderBy: { name: 'asc' }
+  })
+  
+  const worksites = await db.worksite.findMany({
+    orderBy: { name: 'asc' }
+  })
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
@@ -29,15 +38,13 @@ export default async function EditUserPage(props: { params: Promise<{ id: string
 
       <Card className="rounded-2xl border-border/50 shadow-sm bg-card/50 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Módulo em Construção</CardTitle>
+          <CardTitle>Dados do Usuário</CardTitle>
           <CardDescription>
-            A edição de usuários via painel administrativo está programada para a próxima etapa (Gerenciamento Avançado de Acessos).
+            Edite as informações do usuário, perfis e acesso a obras.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            A ativação e inativação rápida já está funcional direto pela tabela!
-          </p>
+          <EditUserForm user={user} roles={roles} worksites={worksites} />
         </CardContent>
       </Card>
     </div>
