@@ -147,9 +147,6 @@ export default async function ProductsPage({
                 <div key={product.id} className="p-5 space-y-4 bg-transparent hover:bg-muted/20 transition-colors">
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 shrink-0 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm uppercase">
-                        {product.name.charAt(0)}
-                      </div>
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
                           <Link href={`/products/${product.id}`} className="font-semibold text-base text-foreground leading-tight hover:text-primary transition-colors">
@@ -243,9 +240,6 @@ export default async function ProductsPage({
                     <TableCell className="px-6 py-4 font-mono text-sm text-muted-foreground">{product.code}</TableCell>
                     <TableCell className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold shadow-sm group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 uppercase text-sm">
-                          {product.name.charAt(0)}
-                        </div>
                         <Link href={`/products/${product.id}`} className="font-semibold text-base text-foreground group-hover:text-primary transition-colors duration-300">
                           {product.name}
                         </Link>

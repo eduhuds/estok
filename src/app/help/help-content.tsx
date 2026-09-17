@@ -14,6 +14,7 @@ const sections = [
   { id: "inventory", title: "Inventário e Coletor" },
   { id: "reports", title: "Relatórios" },
   { id: "admin", title: "Administração" },
+  { id: "faq", title: "FAQ / Dúvidas Comuns" },
 ]
 
 export function HelpContent() {
@@ -369,6 +370,46 @@ export function HelpContent() {
           <p className="text-muted-foreground">
             No <strong>Gerenciamento de Usuários</strong>, você pode criar senhas e definir os níveis de acesso (Ex: O Perfil <em>VIEWER</em> só consegue ver relatórios e estoque, não consegue dar saídas. O <em>MANAGER</em> aprova inventários. O <em>OPERATOR</em> pode usar o Coletor).
           </p>
+        </section>
+
+        <section id="faq" className="scroll-mt-24 space-y-4">
+          <h2 className="text-2xl font-bold border-b pb-2 text-primary">FAQ / Dúvidas Comuns</h2>
+          <div className="space-y-4 mt-4">
+            <div className="border border-border/50 rounded-xl p-4 bg-card">
+              <h4 className="font-bold">1. O saldo de um produto está errado no sistema. Como corrigir?</h4>
+              <p className="text-sm text-muted-foreground mt-2">
+                Como o Estok trabalha com Imutabilidade Operacional, você não pode "editar" o saldo de um produto. Se houver uma diferença física, você deve ir em <strong>Inventário</strong> e criar um Ajuste (Entrada ou Saída por Ajuste) para justificar a sobra ou perda. Isso mantém o rastro de auditoria perfeito.
+              </p>
+            </div>
+            
+            <div className="border border-border/50 rounded-xl p-4 bg-card">
+              <h4 className="font-bold">2. Como transfiro materiais de uma obra (almoxarifado) para outra?</h4>
+              <p className="text-sm text-muted-foreground mt-2">
+                Acesse o menu de <strong>Transferências</strong>. Nele, você pode selecionar o Almoxarifado de Origem (onde o produto está) e o Almoxarifado de Destino (para onde vai). O sistema debita de um lado e credita do outro de forma segura e atrelada a um único documento.
+              </p>
+            </div>
+
+            <div className="border border-border/50 rounded-xl p-4 bg-card">
+              <h4 className="font-bold">3. Tentei excluir um produto mas o sistema não deixou. Por quê?</h4>
+              <p className="text-sm text-muted-foreground mt-2">
+                Produtos que já sofreram movimentações de estoque (entradas, saídas, requisições) não podem ser excluídos para não quebrar o histórico contábil e de relatórios do passado. Nesses casos, você deve alterar o <strong>Status</strong> do produto para <em>Inativo</em> na tela de edição. Assim, ele não aparecerá mais nas buscas para novas operações.
+              </p>
+            </div>
+
+            <div className="border border-border/50 rounded-xl p-4 bg-card">
+              <h4 className="font-bold">4. Posso entregar menos material do que o funcionário pediu na Requisição?</h4>
+              <p className="text-sm text-muted-foreground mt-2">
+                Sim! Ao atender uma Requisição, você verá a coluna "Qtd. Aprovada/Entregue". Se o funcionário pediu 10 luvas, mas você só tem 5 em estoque (ou só quer liberar 5), basta preencher 5. A requisição ficará com status de <em>Parcialmente Atendida</em>.
+              </p>
+            </div>
+
+            <div className="border border-border/50 rounded-xl p-4 bg-card">
+              <h4 className="font-bold">5. O que significa "Imutabilidade Operacional"?</h4>
+              <p className="text-sm text-muted-foreground mt-2">
+                É a segurança do seu patrimônio. Significa que os registros passados de entradas e saídas nunca podem ser alterados ou apagados. Isso evita fraudes e erros invisíveis. Se um lançamento foi feito errado, deve-se fazer um lançamento de estorno ou ajuste, criando um rastro transparente que qualquer auditor ou gestor consegue entender depois.
+              </p>
+            </div>
+          </div>
         </section>
       </div>
     </div>
