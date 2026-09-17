@@ -27,7 +27,11 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
     })
     // Backwards compatibility for old sessions that had { role: string }
     if (payload.role && !payload.roles) {
-      payload.roles = [payload.role]
+      if (payload.role === 'Administrador Sistema') {
+        payload.roles = ['ADMIN']
+      } else {
+        payload.roles = [payload.role as string]
+      }
     }
     return payload as SessionPayload
   } catch {
